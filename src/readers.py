@@ -128,7 +128,16 @@ def buildObsPkl(designDir, obsName, histname, npoints):
         rootfile = ROOT.TFile(str(rootpath))
         hist = rootfile.Get(histname)
         array = buildArray(hist)
+
+        # handling xp spectra gaps
+        if "LEP" in designDir:
+            x = np.where(array[0] == 0)
+            if x != 0:
+                array = np.delete(array,x,axis = 1)
+
         totalDict[str(i)] = {"parameter": design[i], "obs": array}
+    
+    print(totalDict)
 
     picklefile = "preds/" + obsName + ".pkl"
     with open(picklefile, 'wb') as handle:
@@ -137,9 +146,11 @@ def buildObsPkl(designDir, obsName, histname, npoints):
 # builds array for pkl file from a root histogram
 def buildArray(hist):
     nbins = hist.GetNbinsX()
-    listOfBins = []
+    binList = []
+    errorList = []
 
     for i in range(nbins):
-        listOfBins.append([hist.GetBinContent(i+1),hist.GetBinError(i+1)])
+        binList.append(hist.GetBinContent(i+1))
+        errorList.append(0.0)
 
-    return np.array(listOfBins)
+    return np.array([binList,errorList])
