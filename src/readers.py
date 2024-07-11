@@ -1,3 +1,4 @@
+from math import sqrt
 import ROOT
 from pathlib import Path
 import numpy as np
@@ -64,7 +65,24 @@ def ReadData(FileName):
         Result["Data"]["yerr"]["sys"] = RawData[:, 5:]
         Result["SysLabel"] = Result["Label"][5:]
 
+    yerrtot = []
+    for i in range(len(Result["Data"]["yerr"]["stat"])):
+        yerrtot.append(sqrt(Result["Data"]["yerr"]["stat"][i][0]**2 + Result["Data"]["yerr"]["sys"][i][0]**2))
+    Result["Data"]["yerr"]["tot"] = np.array(yerrtot)
+
     return Result
+
+# turning data dict into a pkl for reading in
+def buildDataPkl(Result):
+    tempArray = []
+    for i in range(len(Result["Data"]["y"])):
+        tempArray.append([Result["Data"]["y"][i],Result["Data"]["yerr"]["tot"][i]])
+
+    totalDict = {"0": {"obs": np.array(tempArray)}}
+
+    picklefile = "data/" + Path(Result["FileName"]).stem + ".pkl"
+    with open(picklefile, 'wb') as handle:
+        pkl.dump(totalDict, handle, protocol = 4)
 
 def ReadDesign(FileName):
     # This is the output object
@@ -114,7 +132,7 @@ def buildObsPkl(designDir, obsName, histname, npoints):
 
     picklefile = "preds/" + obsName + ".pkl"
     with open(picklefile, 'wb') as handle:
-        pkl.dump(totalDict, handle, protocol = pkl.HIGHEST_PROTOCOL)
+        pkl.dump(totalDict, handle, protocol = 4)
 
 # builds array for pkl file from a root histogram
 def buildArray(hist):
