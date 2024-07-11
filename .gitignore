@@ -2,3 +2,6 @@ src/__pycache__/**
 data/**
 preds/**
 output/**
+venv/**
+trained_emulators_no_PCA/**
+src/ptemcee_modified/__pycache__/**
