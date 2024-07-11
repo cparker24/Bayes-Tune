@@ -7,6 +7,5 @@ datafiles= [
     "/scratch/user/cameron.parker/projects/STAT/input/vac-data/Data_ALEPH_EpEm91_proton-xp.dat"
 ]
 
-for datafile in datafiles:
-    TestData = ReadData(datafile)
-    buildDataPkl(TestData)
+TestData = [ReadData(datafile) for datafile in datafiles]
+buildDataPkl(TestData)

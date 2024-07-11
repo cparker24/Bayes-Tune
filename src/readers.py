@@ -73,14 +73,17 @@ def ReadData(FileName):
     return Result
 
 # turning data dict into a pkl for reading in
-def buildDataPkl(Result):
-    tempArray = []
-    for i in range(len(Result["Data"]["y"])):
-        tempArray.append([Result["Data"]["y"][i],Result["Data"]["yerr"]["tot"][i]])
+def buildDataPkl(Results):
+    tempData = []
+    tempErrs = []
+    for Result in Results:
+        for i in range(len(Result["Data"]["y"])):
+            tempData.append(Result["Data"]["y"][i])
+            tempErrs.append(Result["Data"]["yerr"]["tot"][i])
 
-    totalDict = {"0": {"obs": np.array(tempArray)}}
+    totalDict = {"0": {"obs": np.array([tempData,tempErrs])}}
 
-    picklefile = "data/" + Path(Result["FileName"]).stem + ".pkl"
+    picklefile = "data/data.pkl"
     with open(picklefile, 'wb') as handle:
         pkl.dump(totalDict, handle, protocol = 4)
 
