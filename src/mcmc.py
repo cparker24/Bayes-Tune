@@ -467,6 +467,8 @@ class Chain:
         with open(self.mcmc_path, 'wb') as file:
             pickle.dump(chain_data, file)
 
+        return sampler
+
 
     # This function is taken from the surmise package (version 0.2.1) and slightly modified.
     # The ptemcee package source code is copied and modified to work with more modern versions of numpy.
@@ -612,6 +614,8 @@ class Chain:
         logging.info('Writing MCMC chains to file...')
         with open(self.mcmc_path, 'wb') as file:
             pickle.dump(chain_data, file)
+
+        return sampler
 
 
     # This function is taken from the surmise package (version 0.2.1) and slightly modified
@@ -912,6 +916,8 @@ class Chain:
         with open(self.mcmc_path, 'wb') as file:
             pickle.dump(chain_data, file)
 
+        return sampler
+
 
     def compute_log_likelihood_for_chain(self, output_path="./mcmc/log_likelihood.pkl"):
         """
@@ -988,6 +994,8 @@ class Chain:
                         'logp': logp, 'logz': logz, 'logz_err': logz_err}
         with open(self.mcmc_path, 'wb') as file:
             pickle.dump(chain_data, file)
+
+        return sampler
 
 def main():
     parser = argparse.ArgumentParser(
