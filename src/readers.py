@@ -1,5 +1,4 @@
 from math import sqrt
-from pathlib import Path
 import numpy as np
 import pandas as pd
 import pickle as pkl
@@ -71,21 +70,6 @@ def ReadData(FileName):
 
     return Result
 
-# turning data dict into a pkl for reading in
-def buildDataPkl(Results):
-    tempData = []
-    tempErrs = []
-    for Result in Results:
-        for i in range(len(Result["Data"]["y"])):
-            tempData.append(Result["Data"]["y"][i])
-            tempErrs.append(Result["Data"]["yerr"]["tot"][i])
-
-    totalDict = {"0": {"obs": np.array([tempData,tempErrs])}}
-
-    picklefile = "data/data.pkl"
-    with open(picklefile, 'wb') as handle:
-        pkl.dump(totalDict, handle, protocol = 4)
-
 def ReadDesign(FileName):
     # This is the output object
     Result = {}
@@ -127,51 +111,3 @@ def ReadPrediction(FileName):
     # Then read the actual model predictions
     Result["Prediction"] = np.loadtxt(FileName).T
     return Result
-
-'''
-# building a pkl file for an observable
-def buildObsPkl(designDir, obsName, histname, npoints):
-    designPath = Path(designDir)
-    paramsPath = designPath / "QVir_Analysis" / "parameters.txt"
-    design = pd.read_csv(str(paramsPath)).to_numpy()
-
-    totalDict = {}
-
-    if "LEP" in designDir:
-        rootPath = Path("totals.root")
-    else:
-        rootPath = Path("root/totals.root")
-
-    # loop over design points in the dir
-    for i in range(npoints):
-        rootpath = designPath / "points" / str(i) / rootPath
-        rootfile = ROOT.TFile(str(rootpath))
-        hist = rootfile.Get(histname)
-        array = buildArray(hist)
-
-        # handling xp spectra gaps
-        if "LEP" in designDir:
-            x = np.where(array[0] == 0)
-            if x != 0:
-                array = np.delete(array,x,axis = 1)
-
-        totalDict[str(i)] = {"parameter": design[i], "obs": array}
-    
-    print(totalDict)
-
-    picklefile = "preds/" + obsName + ".pkl"
-    with open(picklefile, 'wb') as handle:
-        pkl.dump(totalDict, handle, protocol = 4)
-
-# builds array for pkl file from a root histogram
-def buildArray(hist):
-    nbins = hist.GetNbinsX()
-    binList = []
-    errorList = []
-
-    for i in range(nbins):
-        binList.append(hist.GetBinContent(i+1))
-        errorList.append(0.0)
-
-    return np.array([binList,errorList])
-    '''
