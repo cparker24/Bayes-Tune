@@ -1,5 +1,4 @@
 from math import sqrt
-import ROOT
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -90,6 +89,21 @@ def buildDataPkl(Results):
 def ReadDesign(FileName):
     # This is the output object
     Result = {}
+
+    Result["FileName"] = FileName
+    df = pd.read_csv(FileName)
+   
+    # First read all the header information
+    Result["Parameter"] = list(df.columns.values)
+
+    # Then read the actual design parameters
+    Result["Design"] = df.to_numpy()
+    return Result
+
+# old prediction reader
+def ReadPrediction(FileName):
+    # Initialize objects
+    Result = {}
     Version = ''
 
     Result["FileName"] = FileName
@@ -102,16 +116,19 @@ def ReadDesign(FileName):
 
         if(Items[1] == 'Version'):
             Version = Items[2]
-        elif(Items[1] == 'Parameter'):
-            Result["Parameter"] = Items[2:]
+        elif(Items[1] == 'Data'):
+            Result["Data"] = Items[2]
+        elif(Items[1] == 'Design'):
+            Result["Design"] = Items[2]
 
     if(Version != '1.0'):
         raise AssertionError('Bad file version number while reading design points')
 
-    # Then read the actual design parameters
-    Result["Design"] = np.loadtxt(FileName)
+    # Then read the actual model predictions
+    Result["Prediction"] = np.loadtxt(FileName).T
     return Result
 
+'''
 # building a pkl file for an observable
 def buildObsPkl(designDir, obsName, histname, npoints):
     designPath = Path(designDir)
@@ -157,3 +174,4 @@ def buildArray(hist):
         errorList.append(0.0)
 
     return np.array([binList,errorList])
+    '''
