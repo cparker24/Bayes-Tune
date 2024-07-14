@@ -62,7 +62,7 @@ def trainEmulators(model_par, ThisData):
             ThisData["Observables"][system][obs]["emulator"]["emu"].trainEmulatorAutoMask()
 
             with open(ThisData["Observables"][system][obs]["emulator"]["file"], 'wb') as f:
-                dill.dump(ThisData["Observables"][system][obs]["emulator"], f)
+                dill.dump(ThisData["Observables"][system][obs]["emulator"]["emu"], f)
 
 # reading emulators for each obs
 def readEmulators(ThisData):
