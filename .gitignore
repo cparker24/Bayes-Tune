@@ -6,4 +6,4 @@ venv/**
 trained_emulators_no_PCA/**
 src/ptemcee_modified/__pycache__/**
 mcmc/**
-test.py
+test*
