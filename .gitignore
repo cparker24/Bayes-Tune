@@ -8,3 +8,4 @@ src/ptemcee_modified/__pycache__/**
 mcmc/**
 test*
 temp-pkls/*
+emulators/*
