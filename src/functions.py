@@ -72,6 +72,14 @@ def readEmulators(ThisData):
                 emu = dill.load(f)
                 ThisData["Observables"][system][obs]["emulator"]["emu"] = emu
 
+def getEmuPathList(ThisData):
+    emuList = []
+    for system in ThisData["Observables"]:
+        for obs in ThisData["Observables"][system]:
+            emuList.append(ThisData["Observables"][system][obs]["emulator"]["file"])
+
+    return emuList
+
 # sets some universal plot characteristics
 def makeplot(AllData, plotvars, prediction, plotname, indir):
     Nobs = len(AllData["observables"][0][1])
