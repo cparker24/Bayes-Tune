@@ -68,7 +68,9 @@ def trainEmulators(model_par, ThisData):
 def readEmulators(ThisData):
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
-            ThisData["Observables"][system][obs]["emulator"]["emu"] = dill.load(ThisData["Observables"][system][obs]["emulator"]["file"])
+            with open(ThisData["Observables"][system][obs]["emulator"]["file"], 'rb') as f:
+                emu = dill.load(f)
+                ThisData["Observables"][system][obs]["emulator"]["emu"] = emu
 
 # sets some universal plot characteristics
 def makeplot(AllData, plotvars, prediction, plotname, indir):
