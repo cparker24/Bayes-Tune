@@ -3,6 +3,7 @@ import numpy as np
 import pickle as pkl
 from .emulator_BAND import EmulatorBAND
 import dill
+import pandas as pd
 
 # used to trim ranges on observables after reading in
 def trimRange(datInput, slc):
@@ -81,7 +82,7 @@ def getEmuPathList(ThisData):
     return emuList
 
 # getting most like param values
-def extract_parameters(data_array, labels):
+def extract_parameters(data_array, labels, outdir):
     samples = data_array.reshape((-1,data_array.shape[-1]))
     bests = []
 
@@ -91,48 +92,50 @@ def extract_parameters(data_array, labels):
         print(f"{labels[param_index]}: {median1:.3f}-{lower1:.3f}+{upper1:.3f}")
         bests.append(median1)
 
+    df = pd.DataFrame([bests],columns=labels)
+    df.to_csv(outdir+'parameters.txt',index=False)
+
     return np.array(bests)
 
 # sets some universal plot characteristics
-def makeplot(AllData, plotvars, prediction, plotname, indir):
-    Nobs = len(AllData["observables"][0][1])
-    figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 2)
+def makeplot(ThisData, plotname, indir, samples=None):
+    for system in ThisData["Observables"]:
+        Nobs = len(ThisData["Observables"][system])
+        figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 2)
 
-    for s2 in range(0, Nobs):
-        axes[0][s2].set_title(AllData["observables"][0][1][s2])
-        axes[0][s2].set_ylabel(plotvars[s2][1])
-        axes[1][s2].set_xlabel(plotvars[s2][0])
-        axes[1][s2].set_ylabel(r"ratio")
-        
-        S1 = AllData["systems"][0]
-        O  = AllData["observables"][0][0]
-        S2 = AllData["observables"][0][1][s2]
-        
-        DX = AllData["data"][S1][O][S2]['x']
-        DY = AllData["data"][S1][O][S2]['y']
-        DE = np.sqrt(AllData["data"][S1][O][S2]['yerr']['stat'][:,0]**2 + AllData["data"][S1][O][S2]['yerr']['sys'][:,0]**2)
-                
-        if plotname == 'Priors':
-            linecount = len(prediction[S1][O][S2]['Y'])
-            for i, y in enumerate(prediction[S1][O][S2]['Y']):
-                axes[0][s2].plot(DX, y, 'b-', alpha=10/linecount, label=plotname if i==0 else '')
-                axes[1][s2].plot(DX, y/DY, 'b-', alpha=10/linecount, label=plotname if i==0 else '')
-        else:
-            linecount = len(prediction[S1][O][S2])
-            for i, y in enumerate(prediction[S1][O][S2]):
-                axes[0][s2].plot(DX, y, 'b-', alpha=10/linecount, label=plotname if i==0 else '')
-                axes[1][s2].plot(DX, y/DY, 'b-', alpha=10/linecount, label=plotname if i==0 else '')
-        
-        axes[0][s2].errorbar(DX, DY, yerr = DE, fmt='ro', label="Measurements")
-        axes[1][s2].plot(DX, 1+(DE/DY), 'b-', linestyle = '--', color='red')
-        axes[1][s2].plot(DX, 1-(DE/DY), 'b-', linestyle = '--', color='red')
-        axes[1][s2].axhline(y = 1, linestyle = '--')
-        axes[0][s2].set_xscale(plotvars[s2][2])
-        axes[1][s2].set_xscale(plotvars[s2][2])
-        axes[0][s2].set_yscale(plotvars[s2][3])
-        axes[1][s2].set_ylim([0,2])
+        for i, obs in enumerate(ThisData["Observables"][system]):
+            axes[0][i].set_title(obs)
+            axes[1][i].set_xlabel(ThisData["Observables"][system][obs]["plotvars"][0])
+            axes[0][i].set_ylabel(ThisData["Observables"][system][obs]["plotvars"][1])
+            axes[1][i].set_ylabel(r"ratio")
+            
+            DX = ThisData["Observables"][system][obs]["data"]["Data"]["x"]
+            DY = ThisData["Observables"][system][obs]["data"]["Data"]["y"]
+            DE = ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["tot"]
 
-    plt.tight_layout()
-    figure.subplots_adjust(hspace=0)
-    figure.savefig(indir+plotname+'.pdf', dpi = 192)
-    # figure
+            if plotname == "Priors":
+                linecount = len(ThisData["Observables"][system][obs]['predictions']["Prediction"])
+                for i2, y in enumerate(ThisData["Observables"][system][obs]['predictions']["Prediction"]):
+                    axes[0][i].plot(DX, y, 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+                    axes[1][i].plot(DX, y/DY, 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+            else:
+                trimmedsamples = samples[np.random.choice(range(len(samples)), 1000), :]
+                linecount = len(trimmedsamples)
+                for i2, point in enumerate(trimmedsamples):
+                    y = ThisData["Observables"][system][obs]["emulator"]["emu"].predict(point)
+                    axes[0][i].plot(DX, y[0], 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+                    axes[1][i].plot(DX, y[0]/DY, 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+            
+            axes[0][i].errorbar(DX, DY, yerr = DE, fmt='ro', label="Measurements", color='black')
+            axes[1][i].plot(DX, 1+(DE/DY), 'b-', linestyle = '--', color='red')
+            axes[1][i].plot(DX, 1-(DE/DY), 'b-', linestyle = '--', color='red')
+            axes[1][i].axhline(y = 1, linestyle = '--')
+            axes[0][i].set_xscale(ThisData["Observables"][system][obs]["plotvars"][2])
+            axes[1][i].set_xscale(ThisData["Observables"][system][obs]["plotvars"][2])
+            axes[0][i].set_yscale(ThisData["Observables"][system][obs]["plotvars"][3])
+            axes[1][i].set_ylim([0,2])
+
+        plt.tight_layout()
+        figure.subplots_adjust(hspace=0)
+        figure.savefig(indir+system+plotname+'.pdf', dpi = 192)
+        # figure
