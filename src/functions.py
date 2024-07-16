@@ -7,12 +7,19 @@ import pandas as pd
 
 # used to trim ranges on observables after reading in
 def trimRange(datInput, slc):
-    datInput["predictions"]["Prediction"]=np.delete(datInput["pred"]["Prediction"],slc,1)
+    datInput["predictions"]["Prediction"]=np.delete(datInput["predictions"]["Prediction"],slc,1)
     datInput["data"]["Data"]["x"]=np.delete(datInput["data"]["Data"]["x"],slc)
     datInput["data"]["Data"]["xerr"]=np.delete(datInput["data"]["Data"]["xerr"],slc)
     datInput["data"]["Data"]["y"]=np.delete(datInput["data"]["Data"]["y"],slc)
     datInput["data"]["Data"]["yerr"]["stat"]=np.delete(datInput["data"]["Data"]["yerr"]["stat"],slc,0)
     datInput["data"]["Data"]["yerr"]["sys"]=np.delete(datInput["data"]["Data"]["yerr"]["sys"],slc,0)
+    datInput["data"]["Data"]["yerr"]["tot"]=np.delete(datInput["data"]["Data"]["yerr"]["tot"],slc,0)
+
+def trimRanges(ThisData):
+    for system in ThisData["Observables"]:
+        for obs in ThisData["Observables"][system]:
+            for cut in ThisData["Observables"][system][obs]["cuts"]:
+                trimRange(ThisData["Observables"][system][obs], cut)
 
 # building a pkl files for all observables
 def buildObsPkls(ThisData):
@@ -56,7 +63,6 @@ def buildDataPkl(ThisData):
 
 # training emulators for each obs
 def trainEmulators(model_par, ThisData):
-    model_par = "input/modelDesign.txt"
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
             ThisData["Observables"][system][obs]["emulator"]["emu"] = EmulatorBAND(ThisData["Observables"][system][obs]["predpkl"], model_par, method='PCGP', logTrafo=False, parameterTrafoPCA=False)
