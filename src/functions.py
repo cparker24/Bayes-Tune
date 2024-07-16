@@ -21,6 +21,18 @@ def trimRanges(ThisData):
             for cut in ThisData["Observables"][system][obs]["cuts"]:
                 trimRange(ThisData["Observables"][system][obs], cut)
 
+# trimming bad points
+def trimPoints(points, ThisData):
+    points.sort(reverse=True)
+
+    # trimming points in the design array
+    ThisData["Design"]["Design"] = np.delete(ThisData["Design"]["Design"], points, 0)
+
+    # going through the datInput
+    for system in ThisData["Observables"]:
+        for obs in ThisData["Observables"][system]:
+            ThisData["Observables"][system][obs]["predictions"]["Prediction"] = np.delete(ThisData["Observables"][system][obs]["predictions"]["Prediction"], points, 0)
+
 # building a pkl files for all observables
 def buildObsPkls(ThisData):
     design = ThisData["Design"]["Design"]
