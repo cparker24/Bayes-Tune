@@ -80,6 +80,19 @@ def getEmuPathList(ThisData):
 
     return emuList
 
+# getting most like param values
+def extract_parameters(data_array, labels):
+    samples = data_array.reshape((-1,data_array.shape[-1]))
+    bests = []
+
+    for param_index in range(samples.shape[-1]):
+        percentiles1 = np.percentile(samples[:, param_index], [5, 50, 95])
+        median1, lower1, upper1 = percentiles1[1], percentiles1[1]-percentiles1[0], percentiles1[2] - percentiles1[1]
+        print(f"{labels[param_index]}: {median1:.3f}-{lower1:.3f}+{upper1:.3f}")
+        bests.append(median1)
+
+    return np.array(bests)
+
 # sets some universal plot characteristics
 def makeplot(AllData, plotvars, prediction, plotname, indir):
     Nobs = len(AllData["observables"][0][1])
