@@ -368,7 +368,7 @@ class EmulatorBAND:
         return (fpredmean, fpredcov)
 
 
-    def predict(self,X,return_cov=True, extra_std=0.0):
+    def predict(self,X,return_cov=False, extra_std=0.0):
         """
         Predict model output. Here X is the parameter vector at the prediction
         point.
