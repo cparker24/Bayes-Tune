@@ -5,7 +5,7 @@ LEPdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LEPdesign/QVir_Analysis/'
 LHCdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC2760design/QVir_Analysis/'
 
 AllData = {}
-AllData["Design"] = ReadDesign(LEPdir+"parameters.txt")
+AllData["Design"] = ReadDesign(LHCdir+"parameters.txt")
 AllData["Observables"] = {"EpEm91": {}, "PrPr2760": {}}
 AllData["Observables"]["EpEm91"]["charged-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_charged-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'charged-xp.dat'),
@@ -27,7 +27,7 @@ AllData["Observables"]["EpEm91"]["proton-xp"] = {"data": ReadData('/data/rjfgrou
                                                   "emulator": {},
                                                   "plotvars": ["$x_p$","$dN/dx_p$","log","log"],
                                                   "cuts": [np.s_[-2:]]}
-AllData["Observables"]["EpEm91"]["proton-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_inc-jets.dat'),
+AllData["Observables"]["EpEm91"]["jets"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_inc-jets.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'jet.dat'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_T$","$dN/dp_T$","linear","linear"],
