@@ -104,6 +104,10 @@ def extract_parameters(data_array, labels, outdir):
     samples = data_array.reshape((-1,data_array.shape[-1]))
     bests = []
 
+    for i,label in enumerate(labels):
+        if label == "QSfactor":
+            labels[i] = "QS"
+
     for param_index in range(samples.shape[-1]):
         percentiles1 = np.percentile(samples[:, param_index], [5, 50, 95])
         median1, lower1, upper1 = percentiles1[1], percentiles1[1]-percentiles1[0], percentiles1[2] - percentiles1[1]
@@ -156,4 +160,30 @@ def makeplot(ThisData, plotname, indir, samples=None):
         plt.tight_layout()
         figure.subplots_adjust(hspace=0)
         figure.savefig(indir+system+plotname+'.pdf', dpi = 192)
+        # figure
+
+#running validation
+def validationPlots(valData, AllData, indir):
+    for system in valData["Observables"]:
+        Nobs = len(valData["Observables"][system])
+        figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 1)
+
+        for i, obs in enumerate(valData["Observables"][system]):
+            axes[i].set_title(obs)
+            axes[i].set_xlabel(valData["Observables"][system][obs]["plotvars"][0])
+            axes[i].set_ylabel(r"emu/MC")
+
+            DX = AllData["Observables"][system][obs]["data"]["Data"]["x"]
+            linecount = len(valData["Design"]["Design"])
+            for i2, point in enumerate(valData["Design"]["Design"]):
+                y = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point)
+                axes[i].plot(DX, y[0]/valData["Observables"][system][obs]['predictions']['Prediction']['y'][i2], 'b-', alpha=10/linecount)
+            
+            axes[i].axhline(y = 1, linestyle = '--')
+            axes[i].set_xscale(valData["Observables"][system][obs]["plotvars"][2])
+            axes[i].set_ylim([0,2])
+
+        plt.tight_layout()
+        figure.subplots_adjust(hspace=0)
+        figure.savefig(indir+system+'Validation.pdf', dpi = 192)
         # figure
