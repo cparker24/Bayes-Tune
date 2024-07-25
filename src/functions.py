@@ -177,7 +177,7 @@ def validationPlots(valData, AllData, indir):
             linecount = len(valData["Design"]["Design"])
             for i2, point in enumerate(valData["Design"]["Design"]):
                 y = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point)
-                axes[i].plot(DX, y[0]/valData["Observables"][system][obs]['predictions']['Prediction']['y'][i2], 'b-', alpha=10/linecount)
+                axes[i].plot(DX, y[0]/valData["Observables"][system][obs]['predictions']['Prediction'][i2], 'b-', alpha=10/linecount)
             
             axes[i].axhline(y = 1, linestyle = '--')
             axes[i].set_xscale(valData["Observables"][system][obs]["plotvars"][2])
