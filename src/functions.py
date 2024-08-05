@@ -8,6 +8,7 @@ import pandas as pd
 # used to trim ranges on observables after reading in
 def trimRange(datInput, slc):
     datInput["predictions"]["Prediction"]=np.delete(datInput["predictions"]["Prediction"],slc,1)
+    datInput["predictions"]["Error"]=np.delete(datInput["predictions"]["Error"],slc,1)
     datInput["data"]["Data"]["x"]=np.delete(datInput["data"]["Data"]["x"],slc)
     datInput["data"]["Data"]["xerr"]=np.delete(datInput["data"]["Data"]["xerr"],slc)
     datInput["data"]["Data"]["y"]=np.delete(datInput["data"]["Data"]["y"],slc)
@@ -41,11 +42,12 @@ def buildObsPkls(ThisData):
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
             predictions = ThisData["Observables"][system][obs]["predictions"]["Prediction"]
+            errors = ThisData["Observables"][system][obs]["predictions"]["Error"]
             totalDict = {}
 
             # loop over design points in the dir
             for i in range(npoints):
-                tempArray = [predictions[i], [0]*len(predictions[i])]
+                tempArray = [predictions[i], errors[i]]
                 totalDict[str(i)] = {"parameter": np.array(design[i]), "obs": np.array(tempArray)}
 
             picklefile = "temp-pkls/" + system + obs + ".pkl"
@@ -77,7 +79,7 @@ def buildDataPkl(ThisData):
 def trainEmulators(model_par, ThisData):
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
-            ThisData["Observables"][system][obs]["emulator"]["emu"] = EmulatorBAND(ThisData["Observables"][system][obs]["predpkl"], model_par, method='PCGP', logTrafo=False, parameterTrafoPCA=False)
+            ThisData["Observables"][system][obs]["emulator"]["emu"] = EmulatorBAND(ThisData["Observables"][system][obs]["predpkl"], model_par, method='PCSK', logTrafo=False, parameterTrafoPCA=False)
             ThisData["Observables"][system][obs]["emulator"]["emu"].trainEmulatorAutoMask()
 
             with open(ThisData["Observables"][system][obs]["emulator"]["file"], 'wb') as f:

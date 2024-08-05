@@ -93,7 +93,7 @@ def ReadPrediction(FileName):
     Result["FileName"] = FileName
 
     # First read all the header information
-    for Line in open(FileName):
+    for Line in open(FileName+".dat"):
         Items = Line.split()
         if (len(Items) < 2): continue
         if Items[0] != '#': continue
@@ -109,5 +109,6 @@ def ReadPrediction(FileName):
         raise AssertionError('Bad file version number while reading design points')
 
     # Then read the actual model predictions
-    Result["Prediction"] = np.loadtxt(FileName).T
+    Result["Prediction"] = np.loadtxt(FileName+".dat").T
+    Result["Error"] = np.loadtxt(FileName+".err").T
     return Result
