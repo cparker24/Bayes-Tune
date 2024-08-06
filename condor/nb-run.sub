@@ -1,4 +1,5 @@
 # run.sub -- simple job
+# execute with condor_submit condor/nb-run.sub
 
 executable              = condor/run.sh
 arguments               = full-tune.ipynb
