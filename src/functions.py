@@ -57,7 +57,7 @@ def buildObsPkls(ThisData):
             ThisData["Observables"][system][obs]["predpkl"] = picklefile
 
 # turning data dict into a pkl for reading in
-def buildDataPkl(ThisData):
+def buildDataPkl(ThisData, logTrain):
     tempData = []
     tempErrs = []
     for system in ThisData["Observables"]:
@@ -67,7 +67,7 @@ def buildDataPkl(ThisData):
                 tempData.append(Result["Data"]["y"][i])
                 tempErrs.append(Result["Data"]["yerr"]["tot"][i])
 
-    totalDict = {"0": {"obs": np.array([tempData,tempErrs])}}
+    totalDict = {"0": {"obs": np.log(np.array([tempData,tempErrs]) + 1e-30)}}
 
     picklefile = "temp-pkls/data.pkl"
     with open(picklefile, 'wb') as handle:
@@ -76,14 +76,24 @@ def buildDataPkl(ThisData):
     ThisData["datapkl"] = "temp-pkls/data.pkl"
 
 # training emulators for each obs
-def trainEmulators(model_par, ThisData):
+def trainEmulators(model_par, ThisData, logTrain):
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
-            ThisData["Observables"][system][obs]["emulator"]["emu"] = EmulatorBAND(ThisData["Observables"][system][obs]["predpkl"], model_par, method='PCSK', logTrafo=False, parameterTrafoPCA=False)
+            ThisData["Observables"][system][obs]["emulator"]["emu"] = EmulatorBAND(ThisData["Observables"][system][obs]["predpkl"], model_par, method='PCSK', logTrafo=logTrain, parameterTrafoPCA=False)
             ThisData["Observables"][system][obs]["emulator"]["emu"].trainEmulatorAutoMask()
 
             with open(ThisData["Observables"][system][obs]["emulator"]["file"], 'wb') as f:
                 dill.dump(ThisData["Observables"][system][obs]["emulator"]["emu"], f)
+
+def LogData(ThisData):
+    for system in ThisData["Observables"]:
+        for obs in ThisData["Observables"][system]:
+            ThisData["Observables"][system][obs]["data"]["Data"]["x"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["x"] + 1e-30)
+            ThisData["Observables"][system][obs]["data"]["Data"]["xerr"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["xerr"] + 1e-30)
+            ThisData["Observables"][system][obs]["data"]["Data"]["y"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["y"] + 1e-30)
+            ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["stat"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["stat"] + 1e-30)
+            ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["sys"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["sys"] + 1e-30)
+            ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["tot"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["tot"] + 1e-30)
 
 # reading emulators for each obs
 def readEmulators(ThisData):
@@ -122,7 +132,7 @@ def extract_parameters(data_array, labels, outdir):
     return np.array(bests)
 
 # sets some universal plot characteristics
-def makeplot(ThisData, plotname, indir, samples=None):
+def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):
     for system in ThisData["Observables"]:
         Nobs = len(ThisData["Observables"][system])
         figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 2)
@@ -147,8 +157,8 @@ def makeplot(ThisData, plotname, indir, samples=None):
                 linecount = len(trimmedsamples)
                 for i2, point in enumerate(trimmedsamples):
                     y = ThisData["Observables"][system][obs]["emulator"]["emu"].predict(point)
-                    axes[0][i].plot(DX, y[0], 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
-                    axes[1][i].plot(DX, y[0]/DY, 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+                    axes[0][i].plot(DX, np.exp(y[0]) if logTrain else y[0], 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+                    axes[1][i].plot(DX, np.exp(y[0])/DY if logTrain else y[0]/DY, 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
             
             axes[0][i].errorbar(DX, DY, yerr = DE, fmt='ro', label="Measurements", color='black')
             axes[1][i].plot(DX, 1+(DE/DY), 'b-', linestyle = '--', color='red')
@@ -165,12 +175,12 @@ def makeplot(ThisData, plotname, indir, samples=None):
         # figure
 
 #running validation
-def validationPlots(valData, AllData, indir):
-    for system in valData["Observables"]:
-        Nobs = len(valData["Observables"][system])
+def validationPlots(valData, AllData, indir, logTrain = False):
+    for system in AllData["Observables"]:
+        Nobs = len(AllData["Observables"][system])
         figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 1)
 
-        for i, obs in enumerate(valData["Observables"][system]):
+        for i, obs in enumerate(AllData["Observables"][system]):
             axes[i].set_title(obs)
             axes[i].set_xlabel(valData["Observables"][system][obs]["plotvars"][0])
             axes[i].set_ylabel(r"emu/MC")
@@ -178,8 +188,9 @@ def validationPlots(valData, AllData, indir):
             DX = AllData["Observables"][system][obs]["data"]["Data"]["x"]
             linecount = len(valData["Design"]["Design"])
             for i2, point in enumerate(valData["Design"]["Design"]):
-                y = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point)
-                axes[i].plot(DX, y[0]/valData["Observables"][system][obs]['predictions']['Prediction'][i2], 'b-', alpha=10/linecount)
+                y1 = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point)
+                y2 = valData["Observables"][system][obs]['predictions']['Prediction'][i2]
+                axes[i].plot(DX, np.exp(y1[0])/y2, 'b-', alpha=10/linecount)
             
             axes[i].axhline(y = 1, linestyle = '--')
             axes[i].set_xscale(valData["Observables"][system][obs]["plotvars"][2])
