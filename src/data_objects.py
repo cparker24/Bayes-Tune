@@ -12,7 +12,7 @@ AllData["Observables"]["EpEm91"]["charged-xp"] = {"data": ReadData('/data/rjfgro
                                                   "predictions": ReadPrediction(LEPdir+'charged-xp'),
                                                   "emulator": {},
                                                   "plotvars": ["$x_p$","$dN/dx_p$","log","log"],
-                                                  "cuts": [np.s_[-5:]]}
+                                                  "cuts": [np.s_[-7:]]}
 AllData["Observables"]["EpEm91"]["pion-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_pion-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'pion-xp'),
                                                   "emulator": {},
@@ -39,7 +39,7 @@ AllData["Observables"]["PrPr2760"]["charged-pT"] = {"data": ReadData(dataDir+'Da
                                                   "predictions": ReadPrediction(LHCdir+'HadronSpectraPrediction'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_T$","$d^2N/dp_Td\eta$","log","log"],
-                                                  "cuts": []}
+                                                  "cuts": [np.s_[8:12]]}
 AllData["Observables"]["PrPr2760"]["pion-pT"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_pions.dat'),
                                                   "predictions": ReadPrediction(LHCdir+'PionSpectraPrediction'),
                                                   "emulator": {},

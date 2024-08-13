@@ -2,7 +2,7 @@
 # execute with condor_submit condor/nb-run.sub
 
 executable              = condor/run.sh
-arguments               = full-tune.ipynb
+arguments               = /data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/full-tune.ipynb
 
 log                     = condor/run.log
 output                  = condor/run.out
