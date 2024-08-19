@@ -1,7 +1,7 @@
 from .readers import *
 import copy
 
-dataDir = '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+dataDir = '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
 LEPdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LEPdesign/QVir_Analysis/'
 LHCdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC2760design/QVir_Analysis/'
 LHC13000dir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC13000design/QVir_Analysis/'

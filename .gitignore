@@ -12,3 +12,4 @@ emulators/*
 condor/run.err
 condor/run.log
 condor/run.out
+input/data/*
