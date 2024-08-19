@@ -4,10 +4,11 @@ import copy
 dataDir = '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
 LEPdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LEPdesign/QVir_Analysis/'
 LHCdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC2760design/QVir_Analysis/'
+LHC13000dir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC13000design/QVir_Analysis/'
 
 AllData = {}
 AllData["Design"] = ReadDesign(LHCdir+"parameters.txt")
-AllData["Observables"] = {"EpEm91": {}, "PrPr2760": {}}
+AllData["Observables"] = {"EpEm91": {}, "PrPr2760": {}, "PrPr13000": {}}
 AllData["Observables"]["EpEm91"]["charged-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_charged-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'charged-xp'),
                                                   "emulator": {},
@@ -70,6 +71,37 @@ AllData["Observables"]["PrPr2760"]["jets-R4"] = {"data": ReadData(dataDir+'Data_
                                                   "emulator": {},
                                                   "plotvars": ["$p_T$","$d^2\sigma/dp_Td\eta$","linear","log"],
                                                   "cuts": []}
+
+AllData["Observables"]["PrPr13000"]["pion-pT"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr13000_pions.dat'),
+                                                  "predictions": ReadPrediction(LHC13000dir+'PionSpectraPrediction'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_T$","$1/N_{ev}d^2N/dp_Tdy$","log","log"],
+                                                  "cuts": [np.s_[:21]]}
+AllData["Observables"]["PrPr13000"]["kaon-pT"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr13000_kaons.dat'),
+                                                  "predictions": ReadPrediction(LHC13000dir+'KaonSpectraPrediction'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_T$","$1/N_{ev}d^2N/dp_Tdy$","log","log"],
+                                                  "cuts": [np.s_[:16]]}
+AllData["Observables"]["PrPr13000"]["proton-pT"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr13000_protons.dat'),
+                                                  "predictions": ReadPrediction(LHC13000dir+'ProtonSpectraPrediction'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_T$","$1/N_{ev}d^2N/dp_Tdy$","log","log"],
+                                                  "cuts": [np.s_[29:39],np.s_[:14]]}
+AllData["Observables"]["PrPr13000"]["low-y-jets"] = {"data": ReadData(dataDir+'Data_ATLAS_PrPr13000_low-y-jets.dat'),
+                                                  "predictions": ReadPrediction(LHC13000dir+'LowYJetPrediction'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_T$","$d^2\sigma/dp_Tdy$","log","log"],
+                                                  "cuts": [np.s_[-5:]]}
+AllData["Observables"]["PrPr13000"]["mid-y-jets"] = {"data": ReadData(dataDir+'Data_ATLAS_PrPr13000_mid-y-jets.dat'),
+                                                  "predictions": ReadPrediction(LHC13000dir+'MidYJetPrediction'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_T$","$d^2\sigma/dp_Tdy$","log","log"],
+                                                  "cuts": [np.s_[-5:]]}
+AllData["Observables"]["PrPr13000"]["high-y-jets"] = {"data": ReadData(dataDir+'Data_ATLAS_PrPr13000_low-y-jets.dat'),
+                                                  "predictions": ReadPrediction(LHC13000dir+'HighYJetPrediction'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_T$","$d^2\sigma/dp_Tdy$","log","log"],
+                                                  "cuts": [np.s_[-5:]]}
 
 # defining emulator paths
 for system in AllData["Observables"]:
