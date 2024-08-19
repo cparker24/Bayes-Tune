@@ -20,7 +20,7 @@ def histToGraph(hist):
             thisy = 1e-30
         
         if thisyerr > thisy:
-            thisyerr = thisy*0.99
+            thisyerr = 0
 
         x.append(hist.GetBinCenter(i+1))
         xerr.append(hist.GetBinWidth(i+1)/2.)
@@ -40,6 +40,9 @@ def cleanGraph(inGraph):
     y = []
     yerr = []
 
+    gmin = 1e30
+    gmax = 0
+
     for i in range(n):
         thisx = c_double(0)
         thisy = c_double(0)
@@ -58,14 +61,18 @@ def cleanGraph(inGraph):
         x.append(thisx)
         xerr.append(0.0)
         y.append(thisy)
-        yerr.append(0.0)
+        yerr.append(thisyerr)
+
+        if thisy < gmin:
+            gmin = abs(thisy - thisyerr)
+        if thisy > gmax:
+            gmax = thisy + thisyerr
 
     graph = ROOT.TGraphErrors(n,np.array(x),np.array(y),np.array(xerr),np.array(yerr))
     graph.SetTitle(inGraph.GetTitle())
     graph.SetName(inGraph.GetName())
 
-    return graph
-
+    return graph, gmin, gmax
 
 def getGraphs(mcDir):
     # directories
@@ -128,17 +135,15 @@ def makePlot(MCs, data, plotvars, plotDir):
     title = plotvars[4]
 
     # Drawing main plot
+    upperMG = ROOT.TMultiGraph()
     c = ROOT.TCanvas("c1","c1",1000,800)
     upper = ROOT.TPad("plot","plot",0,0.4,1,1)
     upper.SetBottomMargin(0)
     upper.Draw()
     upper.cd()
-    #if(ylog): upper.SetLogy()
-    if(xlog): upper.SetLogx()
-    upperMG = ROOT.TMultiGraph()
 
     # Data graph
-    dataPlot = cleanGraph(data)
+    dataPlot, gmin, gmax = cleanGraph(data)
     dataPlot.SetMarkerStyle(ROOT.kFullDotLarge)
     dataPlot.SetMarkerColor(ROOT.kBlack)
     dataPlot.SetLineColor(ROOT.kBlack)
@@ -157,7 +162,12 @@ def makePlot(MCs, data, plotvars, plotDir):
         MCs[MC].SetTitle(MC)
         upperMG.Add(MCs[MC],"l3")
 
-    # Legend
+    # drawing
+    if(ylog): 
+        upper.SetLogy()
+        upperMG.SetMinimum(gmin/2)
+        upperMG.SetMaximum(gmax*2)
+    if(xlog): upper.SetLogx()
     upperMG.Draw("AP")
     upper.BuildLegend()
 
@@ -190,6 +200,8 @@ def makePlot(MCs, data, plotvars, plotDir):
     lower.Draw()
     lower.cd()
     if(xlog): lower.SetLogx()
+    lowerMG.SetMaximum(2.)
+    lowerMG.SetMinimum(0.)
     lowerMG.Draw("AP")
 
     filename  = plotDir + title + ".png"
