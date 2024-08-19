@@ -16,8 +16,8 @@ def histToGraph(hist):
         thisy = hist.GetBinContent(i+1)
         thisyerr = hist.GetBinError(i+1)
 
-        if thisy < 0:
-            thisy = 1e-30
+        if thisy <= 0:
+            continue
         
         if thisyerr > thisy:
             thisyerr = 0
@@ -27,7 +27,7 @@ def histToGraph(hist):
         y.append(thisy)
         yerr.append(thisyerr)
 
-    graph = ROOT.TGraphErrors(n,np.array(x),np.array(y),np.array(xerr),np.array(yerr))
+    graph = ROOT.TGraphErrors(len(x),np.array(x),np.array(y),np.array(xerr),np.array(yerr))
     graph.SetTitle(hist.GetTitle())
     graph.SetName(hist.GetName())
 
