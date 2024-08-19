@@ -147,11 +147,11 @@ def makePlot(MCs, data, plotvars, plotDir):
     dataPlot.SetMarkerStyle(ROOT.kFullDotLarge)
     dataPlot.SetMarkerColor(ROOT.kBlack)
     dataPlot.SetLineColor(ROOT.kBlack)
-    dataPlot.SetTitle(title)
+    dataPlot.SetTitle("data")
     upperMG.Add(dataPlot,"AP")
     upperMG.GetYaxis().SetLabelSize(0.04)
-
-    #dataPlot.Print("all")
+    upperMG.GetYaxis().SetTitle(plotvars[1])
+    upperMG.GetHistogram().SetTitle(title)
 
     # prediction graph formatting
     for i, MC in enumerate(MCs):
@@ -181,7 +181,13 @@ def makePlot(MCs, data, plotvars, plotDir):
     dataRatio.SetLineColor(ROOT.kBlack)
     dataRatio.SetTitle(title)
     lowerMG.Add(dataRatio,"AP")
-    lowerMG.GetYaxis().SetLabelSize(0.04)
+    lowerMG.GetYaxis().SetLabelSize(0.06)
+    lowerMG.GetYaxis().SetTitleSize(0.06)
+    lowerMG.GetXaxis().SetLabelSize(0.06)
+    lowerMG.GetXaxis().SetTitleSize(0.06)
+    lowerMG.GetYaxis().SetTitle("JETSCAPE/data")
+    plotvars[0] = plotvars[0].replace('$', '')
+    lowerMG.GetXaxis().SetTitle(plotvars[0])
 
     MCratios = []
     for i, MC in enumerate(MCs):
@@ -200,7 +206,7 @@ def makePlot(MCs, data, plotvars, plotDir):
     lower.Draw()
     lower.cd()
     if(xlog): lower.SetLogx()
-    lowerMG.SetMaximum(2.)
+    lowerMG.SetMaximum(2.1)
     lowerMG.SetMinimum(0.)
     lowerMG.Draw("AP")
 
