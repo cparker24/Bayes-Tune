@@ -68,7 +68,7 @@ def cleanGraph(inGraph):
         if thisy > gmax:
             gmax = thisy + thisyerr
 
-    graph = ROOT.TGraphErrors(n,np.array(x),np.array(y),np.array(xerr),np.array(yerr))
+    graph = inGraph.Clone() #ROOT.TGraphErrors(n,np.array(x),np.array(y),np.array(xerr),np.array(yerr))
     graph.SetTitle(inGraph.GetTitle())
     graph.SetName(inGraph.GetName())
 
@@ -114,6 +114,7 @@ def divideGraph(numerator, denominator):
         numerator.GetPoint(i,x,y1)
         denominator.GetPoint(i,x,y2)
         yerr = numerator.GetErrorY(i)
+        xerr = numerator.GetErrorX(i)
     
         if y2.value == 0:
             y2 = c_double(1.0)
@@ -122,7 +123,7 @@ def divideGraph(numerator, denominator):
 
         xs.append(float(x.value))
         ys.append(float(y1.value/y2.value))
-        xerrs.append(float(0))
+        xerrs.append(float(xerr))
         yerrs.append(float(yerr/y2.value))
 
     return ROOT.TGraphErrors(bins,np.array(xs),np.array(ys),np.array(xerrs),np.array(yerrs))
