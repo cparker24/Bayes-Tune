@@ -4,6 +4,7 @@ import pickle as pkl
 from .emulator_BAND import EmulatorBAND
 import dill
 import pandas as pd
+from scipy import optimize
 
 # used to trim ranges on observables after reading in
 def trimRange(datInput, slc):
@@ -130,6 +131,32 @@ def extract_parameters(data_array, labels, outdir):
     df.to_csv(outdir+'parameters.txt',index=False)
 
     return np.array(bests)
+
+# getting most like param values
+def better_extract_parameters(mymcmc, labels, outdir):
+
+    #setting bounds
+    bound_min = mymcmc.min
+    bound_max = mymcmc.max
+    bounds = [(a,b) for (a,b) in zip(bound_min,bound_max)]
+
+    rslt = optimize.differential_evolution(lambda x: -mymcmc.log_likelihood(x.T), 
+                                        bounds=bounds,
+                                        maxiter=10000,
+                                        disp=True,
+                                        tol=1e-9,
+                                        vectorized=True,
+                                        )
+
+    print(rslt.x)
+
+    for param_index in range(len(rslt.x)):
+        print(f"{labels[param_index]}: {rslt.x[param_index]:.3f}")
+
+    df = pd.DataFrame([rslt.x],columns=labels)
+    df.to_csv(outdir+'parameters.txt',index=False)
+
+    return np.array(rslt.x)
 
 # sets some universal plot characteristics
 def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):

@@ -7,7 +7,7 @@ LHCdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC2760design/QVir_Analysis/'
 LHC13000dir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC13000design/QVir_Analysis/'
 
 AllData = {}
-AllData["Design"] = ReadDesign(LHCdir+"parameters.txt")
+AllData["Design"] = ReadDesign("/data/rjfgroup/rjf01/cameron.parker/builds/JETSCAPE/designs/totaldesign.txt")
 AllData["Observables"] = {"EpEm91": {}, "PrPr2760": {}, "PrPr13000": {}}
 AllData["Observables"]["EpEm91"]["charged-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_charged-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'charged-xp'),
@@ -111,9 +111,10 @@ for system in AllData["Observables"]:
 # validation
 LEPvaldir = '/data/rjfgroup/rjf01/cameron.parker/runs/validation/LEP/QVir_Analysis/'
 LHCvaldir = '/data/rjfgroup/rjf01/cameron.parker/runs/validation/LHC2760/QVir_Analysis/'
+LHC13000valdir = '/data/rjfgroup/rjf01/cameron.parker/runs/validation/LHC13000/QVir_Analysis/'
 
 valData = copy.deepcopy(AllData)
-valData["Design"] = ReadDesign(LHCvaldir+"parameters.txt")
+valData["Design"] = ReadDesign("/data/rjfgroup/rjf01/cameron.parker/builds/JETSCAPE/designs/validation-design.txt")
 valData["Observables"]["EpEm91"]["charged-xp"]["predictions"] = ReadPrediction(LEPvaldir+'charged-xp')
 valData["Observables"]["EpEm91"]["pion-xp"]["predictions"] = ReadPrediction(LEPvaldir+'pion-xp')
 valData["Observables"]["EpEm91"]["kaon-xp"]["predictions"] = ReadPrediction(LEPvaldir+'kaon-xp')
