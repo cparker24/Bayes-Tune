@@ -150,13 +150,17 @@ def better_extract_parameters(mymcmc, labels, outdir):
 
     print(rslt.x)
 
-    for param_index in range(len(rslt.x)):
-        print(f"{labels[param_index]}: {rslt.x[param_index]:.3f}")
+    bests = rslt.x
+    labels[3] = "QS"
+    bests[3] = (2*bests[5]+0.05) + (bests[2]-(2*bests[5]+0.05))*bests[3]
 
-    df = pd.DataFrame([rslt.x],columns=labels)
+    for param_index in range(len(bests)):
+        print(f"{labels[param_index]}: {bests[param_index]:.3f}")
+
+    df = pd.DataFrame([bests],columns=labels)
     df.to_csv(outdir+'parameters.txt',index=False)
 
-    return np.array(rslt.x)
+    return np.array(bests)
 
 # sets some universal plot characteristics
 def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):

@@ -81,7 +81,7 @@ AllData["Observables"]["PrPr13000"]["kaon-pT"] = {"data": ReadData(dataDir+'Data
                                                   "predictions": ReadPrediction(LHC13000dir+'KaonSpectraPrediction'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/N_{ev}d^2N/dp_Tdy$","log","log"],
-                                                  "cuts": [np.s_[:16]]}
+                                                  "cuts": [np.s_[:38]]}
 AllData["Observables"]["PrPr13000"]["proton-pT"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr13000_protons.dat'),
                                                   "predictions": ReadPrediction(LHC13000dir+'ProtonSpectraPrediction'),
                                                   "emulator": {},
@@ -96,12 +96,12 @@ AllData["Observables"]["PrPr13000"]["mid-y-jets"] = {"data": ReadData(dataDir+'D
                                                   "predictions": ReadPrediction(LHC13000dir+'MidYJetPrediction'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$d^2\sigma/dp_Tdy$","log","log"],
-                                                  "cuts": [np.s_[-5:]]}
-AllData["Observables"]["PrPr13000"]["high-y-jets"] = {"data": ReadData(dataDir+'Data_ATLAS_PrPr13000_low-y-jets.dat'),
+                                                  "cuts": [np.s_[-15:]]}
+AllData["Observables"]["PrPr13000"]["high-y-jets"] = {"data": ReadData(dataDir+'Data_ATLAS_PrPr13000_high-y-jets.dat'),
                                                   "predictions": ReadPrediction(LHC13000dir+'HighYJetPrediction'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$d^2\sigma/dp_Tdy$","log","log"],
-                                                  "cuts": [np.s_[-5:]]}
+                                                  "cuts": [np.s_[-15:]]}
 
 # defining emulator paths
 for system in AllData["Observables"]:
@@ -129,4 +129,11 @@ valData["Observables"]["PrPr2760"]["proton-pT"]["predictions"] = ReadPrediction(
 valData["Observables"]["PrPr2760"]["jets-R2"]["predictions"] = ReadPrediction(LHCvaldir+'JetSpectraPredictionR2')
 valData["Observables"]["PrPr2760"]["jets-R3"]["predictions"] = ReadPrediction(LHCvaldir+'JetSpectraPredictionR3')
 valData["Observables"]["PrPr2760"]["jets-R4"]["predictions"] = ReadPrediction(LHCvaldir+'JetSpectraPredictionR4')
+
+valData["Observables"]["PrPr13000"]["pion-pT"]["predictions"] = ReadPrediction(LHC13000valdir+'PionSpectraPrediction')
+valData["Observables"]["PrPr13000"]["kaon-pT"]["predictions"] = ReadPrediction(LHC13000valdir+'KaonSpectraPrediction')
+valData["Observables"]["PrPr13000"]["proton-pT"]["predictions"] = ReadPrediction(LHC13000valdir+'ProtonSpectraPrediction')
+valData["Observables"]["PrPr13000"]["low-y-jets"]["predictions"] = ReadPrediction(LHC13000valdir+'LowYJetPrediction')
+valData["Observables"]["PrPr13000"]["mid-y-jets"]["predictions"] = ReadPrediction(LHC13000valdir+'MidYJetPrediction')
+valData["Observables"]["PrPr13000"]["high-y-jets"]["predictions"] = ReadPrediction(LHC13000valdir+'HighYJetPrediction')
                                                   
