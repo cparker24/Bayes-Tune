@@ -23,6 +23,11 @@ def trimRanges(ThisData):
             for cut in ThisData["Observables"][system][obs]["cuts"]:
                 trimRange(ThisData["Observables"][system][obs], cut)
 
+def updateCuts(ThisData, valData):
+    for system in ThisData["Observables"]:
+        for obs in ThisData["Observables"][system]:
+            valData["Observables"][system][obs]["cuts"] = ThisData["Observables"][system][obs]["cuts"]
+
 # trimming bad points
 def trimPoints(points, ThisData):
     points.sort(reverse=True)
