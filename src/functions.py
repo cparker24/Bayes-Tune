@@ -157,7 +157,36 @@ def better_extract_parameters(mymcmc, labels, outdir):
 
     bests = rslt.x
     labels[3] = "QS"
-    bests[3] = (2*bests[5]+0.05) + (bests[2]-(2*bests[5]+0.05))*bests[3]
+    bests[3] = (2*bests[6]+0.05) + (bests[2]-(2*bests[6]+0.05))*bests[3]
+
+    for param_index in range(len(bests)):
+        print(f"{labels[param_index]}: {bests[param_index]:.3f}")
+
+    df = pd.DataFrame([bests],columns=labels)
+    df.to_csv(outdir+'parameters.txt',index=False)
+
+    return np.array(bests)
+
+def ee_extract_parameters(mymcmc, labels, outdir):
+
+    #setting bounds
+    bound_min = mymcmc.min
+    bound_max = mymcmc.max
+    bounds = [(a,b) for (a,b) in zip(bound_min,bound_max)]
+
+    rslt = optimize.differential_evolution(lambda x: -mymcmc.log_likelihood(x.T), 
+                                        bounds=bounds,
+                                        maxiter=10000,
+                                        disp=True,
+                                        tol=1e-9,
+                                        vectorized=True,
+                                        )
+
+    print(rslt.x)
+
+    bests = rslt.x
+    labels[1] = "QS"
+    bests[1] = (2*bests[3]+0.05) + (bests[0]-(2*bests[3]+0.05))*bests[1]
 
     for param_index in range(len(bests)):
         print(f"{labels[param_index]}: {bests[param_index]:.3f}")
