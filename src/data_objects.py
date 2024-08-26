@@ -34,6 +34,11 @@ AllData["Observables"]["EpEm91"]["jets"] = {"data": ReadData('/data/rjfgroup/rjf
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$dN/dp_T$","linear","linear"],
                                                   "cuts": [np.s_[-2:]]}
+AllData["Observables"]["EpEm91"]["mult"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_mult.dat'),
+                                                  "predictions": ReadPrediction(LEPdir+'mult'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$N_{charged}$","$P(N_{charged})$","linear","linear"],
+                                                  "cuts": []}
 
 
 AllData["Observables"]["PrPr2760"]["charged-pT"] = {"data": ReadData(dataDir+'Data_CMS_PrPr2760_charged-hads.dat'),
@@ -120,6 +125,7 @@ valData["Observables"]["EpEm91"]["pion-xp"]["predictions"] = ReadPrediction(LEPv
 valData["Observables"]["EpEm91"]["kaon-xp"]["predictions"] = ReadPrediction(LEPvaldir+'kaon-xp')
 valData["Observables"]["EpEm91"]["proton-xp"]["predictions"] = ReadPrediction(LEPvaldir+'proton-xp')
 valData["Observables"]["EpEm91"]["jets"]["predictions"] = ReadPrediction(LEPvaldir+'jet')
+valData["Observables"]["EpEm91"]["mult"]["predictions"] = ReadPrediction(LEPvaldir+'mult')
 
 
 valData["Observables"]["PrPr2760"]["charged-pT"]["predictions"] = ReadPrediction(LHCvaldir+'HadronSpectraPrediction')

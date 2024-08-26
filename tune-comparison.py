@@ -91,6 +91,7 @@ def getGraphs(mcDir):
     graphList.append(histToGraph(LEPfile.Get("kaons")))
     graphList.append(histToGraph(LEPfile.Get("protons")))
     graphList.append(histToGraph(LEPfile.Get("jets")))
+    graphList.append(histToGraph(LEPfile.Get("multiplicity")))
 
     graphList.append(histToGraph(LHC2760file.Get("hadrons")))
     graphList.append(histToGraph(LHC2760file.Get("smooth pions")))
@@ -249,6 +250,7 @@ dataList.append(ALEPHfile.Get("Table 25").Get("Graph1D_y1")) # pions
 dataList.append(ALEPHfile.Get("Table 26").Get("Graph1D_y1")) # kaons
 dataList.append(ALEPHfile.Get("Table 27").Get("Graph1D_y1")) # protons
 dataList.append(ALEPHjetfile.Get("InclusiveJetEnergy").Get("Graph1D_y1")) # jets
+dataList.append(ALEPHfile.Get("Table 18").Get("Graph1D_y1")) # multiplicity
 
 dataList.append(LHC2760hadronfile.Get("Table 1").Get("Graph1D_y1")) # charged pt
 dataList.append(LHC2760idfile.Get("Table 1").Get("Graph1D_y3")) # pions
