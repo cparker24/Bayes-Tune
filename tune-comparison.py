@@ -6,6 +6,8 @@ from src.data_objects import AllData
 from ctypes import *
 
 def histToGraph(hist):
+    if(not hist): return hist
+
     n = hist.GetNbinsX()
     x = []
     xerr = []
@@ -266,6 +268,7 @@ for system in AllData["Observables"]:
 
 # making plots
 for i in range(len(defaultList)):
+    if(not tuneList[i]): continue
     tempDict = {"default": defaultList[i],
                 "tune": tuneList[i]
                 }
