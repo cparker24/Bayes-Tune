@@ -5,6 +5,7 @@ from .emulator_BAND import EmulatorBAND
 import dill
 import pandas as pd
 from scipy import optimize
+from pathlib import Path # type: ignore
 
 # used to trim ranges on observables after reading in
 def trimRange(datInput, slc):
@@ -41,7 +42,10 @@ def trimPoints(points, ThisData):
             ThisData["Observables"][system][obs]["predictions"]["Prediction"] = np.delete(ThisData["Observables"][system][obs]["predictions"]["Prediction"], points, 0)
 
 # building a pkl files for all observables
-def buildObsPkls(ThisData):
+def buildObsPkls(ThisData):# making directory first
+    pklDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/temp-pkls/"+ThisData["name"]+"/"
+    Path(pklDir).mkdir(parents=True, exist_ok=True)
+
     design = ThisData["Design"]["Design"]
     npoints = len(design)
 
@@ -56,7 +60,7 @@ def buildObsPkls(ThisData):
                 tempArray = [predictions[i], errors[i]]
                 totalDict[str(i)] = {"parameter": np.array(design[i]), "obs": np.array(tempArray)}
 
-            picklefile = "temp-pkls/" + system + obs + ".pkl"
+            picklefile = pklDir + system + obs + ".pkl"
             with open(picklefile, 'wb') as handle:
                 pkl.dump(totalDict, handle, protocol = 4)
 
@@ -64,6 +68,10 @@ def buildObsPkls(ThisData):
 
 # turning data dict into a pkl for reading in
 def buildDataPkl(ThisData, logTrain):
+    # making directory first
+    pklDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/temp-pkls/"+ThisData["name"]+"/"
+    Path(pklDir).mkdir(parents=True, exist_ok=True)
+
     tempData = []
     tempErrs = []
     for system in ThisData["Observables"]:
@@ -75,11 +83,20 @@ def buildDataPkl(ThisData, logTrain):
 
     totalDict = {"0": {"obs": np.log(np.array([tempData,tempErrs]) + 1e-30)}}
 
-    picklefile = "temp-pkls/data.pkl"
+    picklefile = pklDir + "data.pkl"
     with open(picklefile, 'wb') as handle:
         pkl.dump(totalDict, handle, protocol = 4)
 
-    ThisData["datapkl"] = "temp-pkls/data.pkl"
+    ThisData["datapkl"] = picklefile
+
+def setEmuPaths(ThisData):
+    # making directory first
+    emuDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/emulators/"+ThisData["name"]+"/"
+    Path(emuDir).mkdir(parents=True, exist_ok=True)
+
+    for system in ThisData["Observables"]:
+        for obs in ThisData["Observables"][system]:
+            ThisData["Observables"][system][obs]["emulator"]["file"] = emuDir+system+obs+"-emulator.sav"
 
 # training emulators for each obs
 def trainEmulators(model_par, ThisData, logTrain):
@@ -91,6 +108,14 @@ def trainEmulators(model_par, ThisData, logTrain):
             with open(ThisData["Observables"][system][obs]["emulator"]["file"], 'wb') as f:
                 dill.dump(ThisData["Observables"][system][obs]["emulator"]["emu"], f)
 
+# reading emulators for each obs
+def readEmulators(ThisData):
+    for system in ThisData["Observables"]:
+        for obs in ThisData["Observables"][system]:
+            with open(ThisData["Observables"][system][obs]["emulator"]["file"], 'rb') as f:
+                emu = dill.load(f)
+                ThisData["Observables"][system][obs]["emulator"]["emu"] = emu
+
 def LogData(ThisData):
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
@@ -100,14 +125,6 @@ def LogData(ThisData):
             ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["stat"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["stat"] + 1e-30)
             ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["sys"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["sys"] + 1e-30)
             ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["tot"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["tot"] + 1e-30)
-
-# reading emulators for each obs
-def readEmulators(ThisData):
-    for system in ThisData["Observables"]:
-        for obs in ThisData["Observables"][system]:
-            with open(ThisData["Observables"][system][obs]["emulator"]["file"], 'rb') as f:
-                emu = dill.load(f)
-                ThisData["Observables"][system][obs]["emulator"]["emu"] = emu
 
 def getEmuPathList(ThisData):
     emuList = []
