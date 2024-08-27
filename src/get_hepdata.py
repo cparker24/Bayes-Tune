@@ -58,7 +58,7 @@ def get_hepdata(configFileEntry = None):
     # Fetch yaml_data from hepdata url
     response = urlopen(data_url[i],context=context)
     content  = response.read().decode('utf-8')
-    yaml_data = yaml.full_load(content)
+    yaml_data = yaml.load(content)
 
     # Fetch XY names from headers
     xname = yaml_data['independent_variables'][0]['header']['name']
@@ -74,8 +74,12 @@ def get_hepdata(configFileEntry = None):
 
     # print(yaml_data['independent_variables'][0]['values'])
     for x in yaml_data['independent_variables'][0]['values']:
-      xlo.append(x['low'])
-      xhi.append(x['high'])
+      if("value" in x):
+        xlo.append(x['value']-1)
+        xhi.append(x['value']+1)
+      else:
+        xlo.append(x['low'])
+        xhi.append(x['high'])
       # print(x['low'],x['high'])
 
     # print(yaml_data['dependent_variables'][0]['values'])

@@ -12,7 +12,7 @@
 #-----------------------------------------------------------------------------------------------
 
 hepdataJet:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins723509/Figure%202%20-%20Combined%20HT/1/yaml']
@@ -23,7 +23,7 @@ hepdataJet:
   data_index: [0]
 
 hepdataPions:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins886590/Table%201/1/yaml']
@@ -34,7 +34,7 @@ hepdataPions:
   data_index: [0]
 
 hepdataKaons:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins886590/Table%202/1/yaml']
@@ -45,7 +45,7 @@ hepdataKaons:
   data_index: [0]
 
 hepdataProtons:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins886590/Table%203/1/yaml']

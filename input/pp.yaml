@@ -11,7 +11,7 @@
 # provide separate config entries for one or more hepdata entries (as in "hepdata_CMS_HadronRAA_010" block).
 #-----------------------------------------------------------------------------------------------
 hepdataHads:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins1088823/Table%201/1/yaml']
@@ -22,7 +22,7 @@ hepdataHads:
   data_index: [0]
 
 hepdataJet2:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins1487278/Table%204/1/yaml']
@@ -33,7 +33,7 @@ hepdataJet2:
   data_index: [0]
 
 hepdataJet3:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins1487278/Table%204/1/yaml']
@@ -44,7 +44,7 @@ hepdataJet3:
   data_index: [1]
 
 hepdataJet4:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins1487278/Table%204/1/yaml']
@@ -55,7 +55,7 @@ hepdataJet4:
   data_index: [2]
 
 hepdataPions:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins1276299/Table%201/1/yaml']
@@ -66,7 +66,7 @@ hepdataPions:
   data_index: [2]
 
 hepdataKaons:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins1276299/Table%202/1/yaml']
@@ -77,7 +77,7 @@ hepdataKaons:
   data_index: [2]
 
 hepdataProtons:
-  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/'
+  filepath: '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
   data_vrs: 'Version 1.0'
   data_str: 'Data'
   data_url: ['https://www.hepdata.net/download/table/ins1276299/Table%203/1/yaml']
