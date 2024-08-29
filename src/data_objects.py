@@ -9,36 +9,36 @@ LHC13000dir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC13000design/QVir_Anal
 AllData = {}
 AllData["Design"] = ReadDesign("/data/rjfgroup/rjf01/cameron.parker/builds/JETSCAPE/designs/totaldesign.txt")
 AllData["Observables"] = {"EpEm91": {}, "PrPr2760": {}, "PrPr13000": {}}
-AllData["Observables"]["EpEm91"]["charged-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_charged-xp.dat'),
+AllData["Observables"]["EpEm91"]["charged-xp"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_charged-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'charged-xp'),
                                                   "emulator": {},
                                                   "plotvars": ["$x_{p}$","$dN/dx_{p}$","log","log"],
                                                   "cuts": [np.s_[-7:]]}
-AllData["Observables"]["EpEm91"]["pion-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_pion-xp.dat'),
+AllData["Observables"]["EpEm91"]["pion-xp"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_pion-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'pion-xp'),
                                                   "emulator": {},
                                                   "plotvars": ["$x_{p}$","$dN/dx_{p}$","log","log"],
                                                   "cuts": [np.s_[-2:]]}
-AllData["Observables"]["EpEm91"]["kaon-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_kaon-xp.dat'),
+AllData["Observables"]["EpEm91"]["kaon-xp"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_kaon-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'kaon-xp'),
                                                   "emulator": {},
                                                   "plotvars": ["$x_{p}$","$dN/dx_{p}$","log","log"],
                                                   "cuts": [np.s_[-2:]]}
-AllData["Observables"]["EpEm91"]["proton-xp"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_proton-xp.dat'),
+AllData["Observables"]["EpEm91"]["proton-xp"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_proton-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'proton-xp'),
                                                   "emulator": {},
                                                   "plotvars": ["$x_{p}$","$dN/dx_{p}$","log","log"],
                                                   "cuts": [np.s_[-2:]]}
-AllData["Observables"]["EpEm91"]["jets"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_inc-jets.dat'),
+AllData["Observables"]["EpEm91"]["jets"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_inc-jets.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'jet'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$dN/dp_{T}$","linear","linear"],
                                                   "cuts": [np.s_[-2:]]}
-AllData["Observables"]["EpEm91"]["mult"] = {"data": ReadData('/data/rjfgroup/rjf01/cameron.parker/builds/STAT/input/vac-data/Data_ALEPH_EpEm91_mult.dat'),
+AllData["Observables"]["EpEm91"]["mult"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_mult.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'mult'),
                                                   "emulator": {},
                                                   "plotvars": ["$N_{charged}$","$P(N_{charged})$","linear","linear"],
-                                                  "cuts": []}
+                                                  "cuts": [np.s_[-10:]]}
 
 
 AllData["Observables"]["PrPr2760"]["charged-pT"] = {"data": ReadData(dataDir+'Data_CMS_PrPr2760_charged-hads.dat'),
