@@ -217,7 +217,7 @@ def ee_extract_parameters(mymcmc, labels, outdir):
 def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):
     for system in ThisData["Observables"]:
         Nobs = len(ThisData["Observables"][system])
-        figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 2)
+        figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 2, squeeze = False)
 
         for i, obs in enumerate(ThisData["Observables"][system]):
             axes[0][i].set_title(obs)
@@ -260,23 +260,23 @@ def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):
 def validationPlots(valData, AllData, indir, logTrain = False):
     for system in AllData["Observables"]:
         Nobs = len(AllData["Observables"][system])
-        figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 1)
+        figure, axes = plt.subplots(figsize = (3*Nobs, 3), ncols = Nobs, nrows = 1, squeeze = False)
 
         for i, obs in enumerate(AllData["Observables"][system]):
-            axes[i].set_title(obs)
-            axes[i].set_xlabel(valData["Observables"][system][obs]["plotvars"][0])
-            axes[i].set_ylabel(r"emu/MC")
+            axes[0][i].set_title(obs)
+            axes[0][i].set_xlabel(valData["Observables"][system][obs]["plotvars"][0])
+            axes[0][i].set_ylabel(r"emu/MC")
 
             DX = AllData["Observables"][system][obs]["data"]["Data"]["x"]
             linecount = len(valData["Design"]["Design"])
             for i2, point in enumerate(valData["Design"]["Design"]):
                 y1 = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point)
                 y2 = valData["Observables"][system][obs]['predictions']['Prediction'][i2]
-                axes[i].plot(DX, np.exp(y1[0])/y2, 'b-', alpha=10/linecount)
+                axes[0][i].plot(DX, np.exp(y1[0])/y2, 'b-', alpha=10/linecount)
             
-            axes[i].axhline(y = 1, linestyle = '--')
-            axes[i].set_xscale(valData["Observables"][system][obs]["plotvars"][2])
-            axes[i].set_ylim([0,2])
+            axes[0][i].axhline(y = 1, linestyle = '--')
+            axes[0][i].set_xscale(valData["Observables"][system][obs]["plotvars"][2])
+            axes[0][i].set_ylim([0,2])
 
         plt.tight_layout()
         figure.subplots_adjust(hspace=0)
