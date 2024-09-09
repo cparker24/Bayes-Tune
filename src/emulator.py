@@ -450,7 +450,7 @@ class Emulator:
         return(trainStatus)
 
 
-    def predict(self, X, return_cov=True, extra_std=0):
+    def predict(self, X, return_cov=False, extra_std=0):
         """
         Predict model output at `X`.
 
