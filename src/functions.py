@@ -6,6 +6,8 @@ import dill
 import pandas as pd
 from scipy import optimize
 from pathlib import Path # type: ignore
+from .mcmc import Chain
+import corner
 
 # used to trim ranges on observables after reading in
 def trimRange(datInput, slc):
@@ -81,7 +83,7 @@ def buildDataPkl(ThisData, logTrain):
                 tempData.append(Result["Data"]["y"][i])
                 tempErrs.append(Result["Data"]["yerr"]["tot"][i])
 
-    totalDict = {"0": {"obs": np.log(np.array([tempData,tempErrs]) + 1e-30)}}
+    totalDict = {"0": {"obs": np.log(np.array([tempData,tempErrs]) + 1e-30)}} if logTrain else {"0": {"obs": np.array([tempData,tempErrs])}}
 
     picklefile = pklDir + "data.pkl"
     with open(picklefile, 'wb') as handle:
@@ -311,3 +313,87 @@ def validationPlots(valData, AllData, indir, logTrain = False):
         figure.subplots_adjust(hspace=0)
         figure.savefig(indir+system+'Validation.pdf', dpi = 192)
         # figure
+
+def buildClosurePkl(ThisData, name, logTrain=False):
+    # making directory first
+    pklDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/temp-pkls/"+name+"/"
+    Path(pklDir).mkdir(parents=True, exist_ok=True)
+
+    tempData = []
+    tempErrs = []
+    for system in ThisData["Observables"]:
+        for obs in ThisData["Observables"][system]:
+            Result = ThisData["Observables"][system][obs]["predictions"]
+            for i in range(len(Result["Prediction"][0])):
+                tempData.append(Result["Prediction"][0][i])
+                tempErrs.append(Result["Error"][0][i])
+
+    totalDict = {"0": {"obs": np.log(np.array([tempData,tempErrs]) + 1e-30)}} if logTrain else {"0": {"obs": np.array([tempData,tempErrs])}}
+
+    picklefile = pklDir + "closure.pkl"
+    with open(picklefile, 'wb') as handle:
+        pkl.dump(totalDict, handle, protocol = 4)
+
+    return picklefile
+
+def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True):
+    closurepkl = buildClosurePkl(valData, ThisData["name"], logTrain)
+
+    mcmcpath = "mcmc/" + ThisData["name"] + "-closure.pkl"
+    mymcmc = Chain(mcmc_path=mcmcpath, expdata_path=closurepkl, model_parafile=model_par)
+    mymcmc.loadEmulator(getEmuPathList(ThisData))
+
+    # running pocoMC
+    n_effective=4000
+    n_active=2000
+    n_prior=8000
+    sample="tpcn"
+    n_max_steps=100
+    random_state=42
+
+    n_total = 25000
+    n_evidence = 0
+
+    pool = 20
+
+    if runchain:
+        sampler = mymcmc.run_pocoMC(n_effective=n_effective, n_active=n_active,
+                                n_prior=n_prior, sample=sample,
+                                n_max_steps=n_max_steps, random_state=random_state,
+                                n_total=n_total, n_evidence=n_evidence, pool=pool)
+
+    with open(mcmcpath, 'rb') as pf:
+        data = pkl.load(pf)
+
+    labels = mymcmc.label
+    fig = corner.corner(data['chain'], weights=data['weights'], labels=labels, color="C0")
+    ndim = len(labels)
+    axes = np.array(fig.axes).reshape((ndim, ndim))
+
+    # Loop over the diagonal
+    for i in range(ndim):
+        ax = axes[i, i]
+        ax.axvline(valData["Design"]["Design"][0][i], color="b")
+
+    plt.show()
+    fig.savefig(indir+'Closure.pdf', dpi = 192)
+
+    #setting bounds
+    bound_min = mymcmc.min
+    bound_max = mymcmc.max
+    bounds = [(a,b) for (a,b) in zip(bound_min,bound_max)]
+
+    rslt = optimize.differential_evolution(lambda x: -mymcmc.log_likelihood(x.T), 
+                                        bounds=bounds,
+                                        maxiter=10000,
+                                        disp=True,
+                                        tol=1e-9,
+                                        vectorized=True,
+                                        )
+
+    print(rslt.x)
+
+    bests = rslt.x
+
+    for param_index in range(len(bests)):
+        print(f"{labels[param_index]}: {bests[param_index]:.3f} vs ", valData["Design"]["Design"][0][param_index])
