@@ -73,6 +73,7 @@ def buildDataPkl(ThisData, logTrain):
     # making directory first
     pklDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/temp-pkls/"+ThisData["name"]+"/"
     Path(pklDir).mkdir(parents=True, exist_ok=True)
+    print("Data sets being added to pkl:")
 
     tempData = []
     tempErrs = []
@@ -82,8 +83,12 @@ def buildDataPkl(ThisData, logTrain):
             for i in range(len(Result["Data"]["y"])):
                 tempData.append(Result["Data"]["y"][i])
                 tempErrs.append(Result["Data"]["yerr"]["tot"][i])
+            print(system+obs)
 
-    totalDict = {"0": {"obs": np.log(np.array([tempData,tempErrs]) + 1e-30)}} if logTrain else {"0": {"obs": np.array([tempData,tempErrs])}}
+    dataArray = np.log(np.array(tempData) + 1e-30) if logTrain else np.array(tempData)
+    errorArray = np.abs(np.array(tempErrs)/np.array(tempData) + 1e-30) if logTrain else np.array(tempData)
+
+    totalDict = {"0": {"obs": np.array([dataArray,errorArray])}}
 
     picklefile = pklDir + "data.pkl"
     with open(picklefile, 'wb') as handle:
@@ -129,10 +134,12 @@ def LogData(ThisData):
             ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["tot"]=np.log(ThisData["Observables"][system][obs]["data"]["Data"]["yerr"]["tot"] + 1e-30)
 
 def getEmuPathList(ThisData):
+    print("Emulators being loaded:")
     emuList = []
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
             emuList.append(ThisData["Observables"][system][obs]["emulator"]["file"])
+            print(ThisData["Observables"][system][obs]["emulator"]["file"])
 
     return emuList
 
@@ -328,7 +335,13 @@ def buildClosurePkl(ThisData, name, logTrain=False):
                 tempData.append(Result["Prediction"][0][i])
                 tempErrs.append(Result["Error"][0][i])
 
-    totalDict = {"0": {"obs": np.log(np.array([tempData,tempErrs]) + 1e-30)}} if logTrain else {"0": {"obs": np.array([tempData,tempErrs])}}
+            print("Adding " + system + obs + " to closure data")
+
+
+    dataArray = np.log(np.array(tempData) + 1e-30) if logTrain else np.array(tempData)
+    errorArray = np.abs(np.array(tempErrs)/np.array(tempData) + 1e-30) if logTrain else np.array(tempData)
+
+    totalDict = {"0": {"obs": np.array([dataArray,errorArray])}}
 
     picklefile = pklDir + "closure.pkl"
     with open(picklefile, 'wb') as handle:
