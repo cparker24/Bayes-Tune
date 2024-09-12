@@ -44,8 +44,10 @@ def cleanGraph(inGraph):
 
     gmin = 1e30
     gmax = 0
+    maxindex = 0
 
     for i in range(n):
+        maxindex = i
         thisx = c_double(0)
         thisy = c_double(0)
         inGraph.GetPoint(i,thisx,thisy)
@@ -74,7 +76,15 @@ def cleanGraph(inGraph):
     graph.SetTitle(inGraph.GetTitle())
     graph.SetName(inGraph.GetName())
 
-    return graph, gmin, gmax
+    # getting x ranges
+    thisx = c_double(0)
+    thisy = c_double(0)
+    inGraph.GetPoint(0,thisx,thisy)
+    xmin = thisx.value - inGraph.GetErrorX(0)
+    inGraph.GetPoint(maxindex,thisx,thisy)
+    xmax = thisx.value + inGraph.GetErrorX(maxindex)
+
+    return graph, gmin, gmax, xmin, xmax
 
 def getGraphs(mcDir):
     # directories
@@ -147,13 +157,14 @@ def makePlot(MCs, data, plotvars, plotDir):
     upper.cd()
 
     # Data graph
-    dataPlot, gmin, gmax = cleanGraph(data)
+    dataPlot, gmin, gmax, xmin, xmax = cleanGraph(data)
     dataPlot.SetMarkerStyle(ROOT.kFullDotLarge)
     dataPlot.SetMarkerColor(ROOT.kBlack)
     dataPlot.SetLineColor(ROOT.kBlack)
     dataPlot.SetTitle("data")
     upperMG.Add(dataPlot,"AP")
     upperMG.GetYaxis().SetLabelSize(0.04)
+    plotvars[1] = plotvars[1].replace('$', '')
     upperMG.GetYaxis().SetTitle(plotvars[1])
     upperMG.GetHistogram().SetTitle(title)
 
@@ -173,6 +184,7 @@ def makePlot(MCs, data, plotvars, plotDir):
         upperMG.SetMaximum(gmax*2)
     if(xlog): upper.SetLogx()
     upperMG.Draw("AP")
+    upperMG.GetXaxis().SetLimits(xmin,xmax)
     upper.BuildLegend()
 
     # ratio plots
@@ -213,6 +225,11 @@ def makePlot(MCs, data, plotvars, plotDir):
     lowerMG.SetMaximum(2.1)
     lowerMG.SetMinimum(0.)
     lowerMG.Draw("AP")
+    lowerMG.GetXaxis().SetLimits(xmin,xmax)
+
+    line = ROOT.TLine(xmin,1,xmax,1)
+    line.SetLineStyle(9)
+    line.Draw("SAME")
 
     filename  = plotDir + title + ".png"
     c.Print(filename)
