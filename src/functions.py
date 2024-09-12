@@ -321,16 +321,16 @@ def validationPlots(valData, AllData, indir, logTrain = False):
         figure.savefig(indir+system+'Validation.pdf', dpi = 192)
         # figure
 
-def buildClosurePkl(ThisData, name, logTrain=False):
+def buildClosurePkl(ThisData, valData, logTrain=False):
     # making directory first
-    pklDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/temp-pkls/"+name+"/"
+    pklDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/temp-pkls/"+ThisData["name"]+"/"
     Path(pklDir).mkdir(parents=True, exist_ok=True)
 
     tempData = []
     tempErrs = []
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
-            Result = ThisData["Observables"][system][obs]["predictions"]
+            Result = valData["Observables"][system][obs]["predictions"]
             for i in range(len(Result["Prediction"][0])):
                 tempData.append(Result["Prediction"][0][i])
                 tempErrs.append(Result["Error"][0][i])
@@ -350,7 +350,7 @@ def buildClosurePkl(ThisData, name, logTrain=False):
     return picklefile
 
 def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True):
-    closurepkl = buildClosurePkl(valData, ThisData["name"], logTrain)
+    closurepkl = buildClosurePkl(ThisData, valData, logTrain)
 
     mcmcpath = "mcmc/" + ThisData["name"] + "-closure.pkl"
     mymcmc = Chain(mcmc_path=mcmcpath, expdata_path=closurepkl, model_parafile=model_par)
