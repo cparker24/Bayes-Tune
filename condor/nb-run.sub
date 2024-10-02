@@ -8,7 +8,6 @@ output                  = condor/run.out
 error                   = condor/run.err
 
 request_cpus            = 1
-batch_name              = stat-run
 getenv                  = True
 
 queue
