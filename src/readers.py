@@ -110,5 +110,7 @@ def ReadPrediction(FileName):
 
     # Then read the actual model predictions
     Result["Prediction"] = np.loadtxt(FileName+".dat").T
+    Result["Prediction"] = Result["Prediction"][:,~np.all(Result["Prediction"] == 0, axis=0)]
     Result["Error"] = np.loadtxt(FileName+".err").T
+    Result["Error"] = Result["Error"][:,~np.all(Result["Prediction"] == 0, axis=0)]
     return Result
