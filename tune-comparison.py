@@ -5,6 +5,15 @@ import numpy as np
 from src.data_objects import AllData
 from ctypes import *
 
+ROOT.gStyle.SetTitleSize(0.1,"X")
+ROOT.gStyle.SetTitleSize(0.07,"Y")
+ROOT.gStyle.SetTitleOffset(0.9,"Y")
+ROOT.gStyle.SetTitleSize(0.1,"T")
+ROOT.gStyle.SetLabelSize(0.1,"X")
+ROOT.gStyle.SetLabelSize(0.07,"Y")
+ROOT.gStyle.SetPadLeftMargin(0.15)
+ROOT.gStyle.SetPadBottomMargin(0.90)
+
 def histToGraph(hist):
     if(not hist): return hist
 
@@ -150,7 +159,7 @@ def makePlot(MCs, data, plotvars, plotDir):
 
     # Drawing main plot
     upperMG = ROOT.TMultiGraph()
-    c = ROOT.TCanvas("c1","c1",1000,800)
+    c = ROOT.TCanvas("c1","c1",1000,700)
     upper = ROOT.TPad("plot","plot",0,0.4,1,1)
     upper.SetBottomMargin(0)
     upper.Draw()
@@ -163,10 +172,9 @@ def makePlot(MCs, data, plotvars, plotDir):
     dataPlot.SetLineColor(ROOT.kBlack)
     dataPlot.SetTitle("data")
     upperMG.Add(dataPlot,"AP")
-    upperMG.GetYaxis().SetLabelSize(0.04)
     plotvars[1] = plotvars[1].replace('$', '')
     upperMG.GetYaxis().SetTitle(plotvars[1])
-    upperMG.GetHistogram().SetTitle(title)
+    #upperMG.GetHistogram().SetTitle(title)
 
     # prediction graph formatting
     for i, MC in enumerate(MCs):
@@ -197,10 +205,10 @@ def makePlot(MCs, data, plotvars, plotDir):
     dataRatio.SetLineColor(ROOT.kBlack)
     dataRatio.SetTitle(title)
     lowerMG.Add(dataRatio,"AP")
-    lowerMG.GetYaxis().SetLabelSize(0.06)
-    lowerMG.GetYaxis().SetTitleSize(0.06)
-    lowerMG.GetXaxis().SetLabelSize(0.06)
-    lowerMG.GetXaxis().SetTitleSize(0.06)
+    #lowerMG.GetYaxis().SetLabelSize(0.06)
+    #lowerMG.GetYaxis().SetTitleSize(0.06)
+    #lowerMG.GetXaxis().SetLabelSize(0.06)
+    #lowerMG.GetXaxis().SetTitleSize(0.06)
     lowerMG.GetYaxis().SetTitle("JETSCAPE/data")
     plotvars[0] = plotvars[0].replace('$', '')
     lowerMG.GetXaxis().SetTitle(plotvars[0])
