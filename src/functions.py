@@ -253,6 +253,7 @@ def pp_extract_parameters(mymcmc, labels, outdir):
 
 # sets some universal plot characteristics
 def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):
+    print("Making " + plotname + "...")
     for system in ThisData["Observables"]:
         Nobs = len(ThisData["Observables"][system])
         figure, axes = plt.subplots(figsize = (3*Nobs, 5), ncols = Nobs, nrows = 2, squeeze = False)
