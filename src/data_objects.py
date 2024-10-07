@@ -38,29 +38,49 @@ AllData["Observables"]["EpEm91"]["mult"] = {"data": ReadData(dataDir+'Data_ALEPH
                                                   "predictions": ReadPrediction(LEPdir+'mult'),
                                                   "emulator": {},
                                                   "plotvars": ["$N_{charged}$","$P(N_{charged})$","linear","linear"],
-                                                  "cuts": [np.s_[-10:]]}
+                                                  "cuts": [np.s_[-11:],np.s_[:2]]}
 
 
-AllData["Observables"]["PrPr2760"]["charged-pT"] = {"data": ReadData(dataDir+'Data_CMS_PrPr2760_charged-hads.dat'),
-                                                  "predictions": ReadPrediction(LHCdir+'HadronSpectraPrediction'),
+AllData["Observables"]["PrPr2760"]["charged-pT-soft"] = {"data": ReadData(dataDir+'Data_CMS_PrPr2760_charged-hads-soft.dat'),
+                                                  "predictions": ReadPrediction(LHCdir+'HadronSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$d^2N/dp_{T}d\eta$","log","log"],
-                                                  "cuts": [np.s_[8:12]]}
-AllData["Observables"]["PrPr2760"]["pion-pT"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_pions.dat'),
-                                                  "predictions": ReadPrediction(LHCdir+'PionSpectraPrediction'),
+                                                  "cuts": []}
+AllData["Observables"]["PrPr2760"]["charged-pT-hard"] = {"data": ReadData(dataDir+'Data_CMS_PrPr2760_charged-hads-hard.dat'),
+                                                  "predictions": ReadPrediction(LHCdir+'HadronSpectraPredictionHard'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_{T}$ [GeV]","$d^2N/dp_{T}d\eta$","log","log"],
+                                                  "cuts": []}
+AllData["Observables"]["PrPr2760"]["pion-pT-soft"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_pions-soft.dat'),
+                                                  "predictions": ReadPrediction(LHCdir+'PionSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[31:50]]}
-AllData["Observables"]["PrPr2760"]["kaon-pT"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_kaons.dat'),
-                                                  "predictions": ReadPrediction(LHCdir+'KaonSpectraPrediction'),
+                                                  "cuts": [[np.s_[:-10]]]}
+AllData["Observables"]["PrPr2760"]["pion-pT-hard"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_pions-hard.dat'),
+                                                  "predictions": ReadPrediction(LHCdir+'PionSpectraPredictionHard'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[26:45]]}
-AllData["Observables"]["PrPr2760"]["proton-pT"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_protons.dat'),
-                                                  "predictions": ReadPrediction(LHCdir+'ProtonSpectraPrediction'),
+                                                  "cuts": []}
+AllData["Observables"]["PrPr2760"]["kaon-pT-soft"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_kaons-soft.dat'),
+                                                  "predictions": ReadPrediction(LHCdir+'KaonSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[24:43]]}
+                                                  "cuts": [np.s_[:-10]]}
+AllData["Observables"]["PrPr2760"]["kaon-pT-hard"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_kaons-hard.dat'),
+                                                  "predictions": ReadPrediction(LHCdir+'KaonSpectraPredictionHard'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
+                                                  "cuts": []}
+AllData["Observables"]["PrPr2760"]["proton-pT-soft"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_protons-soft.dat'),
+                                                  "predictions": ReadPrediction(LHCdir+'ProtonSpectraPredictionSoft'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
+                                                  "cuts": [np.s_[:-10]]}
+AllData["Observables"]["PrPr2760"]["proton-pT-hard"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_protons-hard.dat'),
+                                                  "predictions": ReadPrediction(LHCdir+'ProtonSpectraPredictionHard'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
+                                                  "cuts": []}
 AllData["Observables"]["PrPr2760"]["jets-R2"] = {"data": ReadData(dataDir+'Data_CMS_PrPr2760_jets-2.dat'),
                                                   "predictions": ReadPrediction(LHCdir+'JetSpectraPredictionR2'),
                                                   "emulator": {},
@@ -128,10 +148,14 @@ valData["Observables"]["EpEm91"]["jets"]["predictions"] = ReadPrediction(LEPvald
 valData["Observables"]["EpEm91"]["mult"]["predictions"] = ReadPrediction(LEPvaldir+'mult')
 
 
-valData["Observables"]["PrPr2760"]["charged-pT"]["predictions"] = ReadPrediction(LHCvaldir+'HadronSpectraPrediction')
-valData["Observables"]["PrPr2760"]["pion-pT"]["predictions"] = ReadPrediction(LHCvaldir+'PionSpectraPrediction')
-valData["Observables"]["PrPr2760"]["kaon-pT"]["predictions"] = ReadPrediction(LHCvaldir+'KaonSpectraPrediction')
-valData["Observables"]["PrPr2760"]["proton-pT"]["predictions"] = ReadPrediction(LHCvaldir+'ProtonSpectraPrediction')
+valData["Observables"]["PrPr2760"]["charged-pT-soft"]["predictions"] = ReadPrediction(LHCvaldir+'HadronSpectraPredictionSoft')
+valData["Observables"]["PrPr2760"]["charged-pT-hard"]["predictions"] = ReadPrediction(LHCvaldir+'HadronSpectraPredictionHard')
+valData["Observables"]["PrPr2760"]["pion-pT-soft"]["predictions"] = ReadPrediction(LHCvaldir+'PionSpectraPredictionSoft')
+valData["Observables"]["PrPr2760"]["pion-pT-hard"]["predictions"] = ReadPrediction(LHCvaldir+'PionSpectraPredictionHard')
+valData["Observables"]["PrPr2760"]["kaon-pT-soft"]["predictions"] = ReadPrediction(LHCvaldir+'KaonSpectraPredictionSoft')
+valData["Observables"]["PrPr2760"]["kaon-pT-hard"]["predictions"] = ReadPrediction(LHCvaldir+'KaonSpectraPredictionHard')
+valData["Observables"]["PrPr2760"]["proton-pT-soft"]["predictions"] = ReadPrediction(LHCvaldir+'ProtonSpectraPredictionSoft')
+valData["Observables"]["PrPr2760"]["proton-pT-hard"]["predictions"] = ReadPrediction(LHCvaldir+'ProtonSpectraPredictionHard')
 valData["Observables"]["PrPr2760"]["jets-R2"]["predictions"] = ReadPrediction(LHCvaldir+'JetSpectraPredictionR2')
 valData["Observables"]["PrPr2760"]["jets-R3"]["predictions"] = ReadPrediction(LHCvaldir+'JetSpectraPredictionR3')
 valData["Observables"]["PrPr2760"]["jets-R4"]["predictions"] = ReadPrediction(LHCvaldir+'JetSpectraPredictionR4')
