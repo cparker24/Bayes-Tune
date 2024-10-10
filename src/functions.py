@@ -86,7 +86,7 @@ def buildDataPkl(ThisData, logTrain):
             print(system+obs)
 
     dataArray = np.log(np.array(tempData) + 1e-30) if logTrain else np.array(tempData)
-    errorArray = np.abs(np.array(tempErrs)/np.array(tempData) + 1e-30) if logTrain else np.array(tempData)
+    errorArray = np.abs(np.array(tempErrs)/np.array(tempData) + 1e-30) if logTrain else np.array(tempErrs)
 
     totalDict = {"0": {"obs": np.array([dataArray,errorArray])}}
 
@@ -311,7 +311,7 @@ def validationPlots(valData, AllData, indir, logTrain = False):
             for i2, point in enumerate(valData["Design"]["Design"]):
                 y1 = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point)
                 y2 = valData["Observables"][system][obs]['predictions']['Prediction'][i2]
-                axes[0][i].plot(DX, np.exp(y1[0])/y2, 'b-', alpha=10/linecount)
+                axes[0][i].plot(DX, np.exp(y1[0])/y2 if logTrain else y1[0]/y2, 'b-', alpha=10/linecount)
             
             axes[0][i].axhline(y = 1, linestyle = '--')
             axes[0][i].set_xscale(valData["Observables"][system][obs]["plotvars"][2])
