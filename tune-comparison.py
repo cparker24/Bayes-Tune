@@ -289,6 +289,7 @@ dataList.append(LHC2760jetfile.Get("Table 4").Get("Graph1D_y3")) # jets 0.4
 plotVars = []
 for system in AllData["Observables"]:
     for obs in AllData["Observables"][system]:
+        if "hard" in obs: continue
         plotVarsTemp = AllData["Observables"][system][obs]["plotvars"]
         plotVarsTemp.append(system+obs)
         plotVars.append(plotVarsTemp)
