@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pickle as pkl
 from .emulator_BAND import EmulatorBAND
+from .emulator import Emulator
 import dill
 import pandas as pd
 from scipy import optimize
@@ -106,10 +107,11 @@ def setEmuPaths(ThisData):
             ThisData["Observables"][system][obs]["emulator"]["file"] = emuDir+system+obs+"-emulator.sav"
 
 # training emulators for each obs
-def trainEmulators(model_par, ThisData, logTrain):
+def trainEmulators(model_par, ThisData, logTrain, scikit=False):
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
-            ThisData["Observables"][system][obs]["emulator"]["emu"] = EmulatorBAND(ThisData["Observables"][system][obs]["predpkl"], model_par, method='PCSK', logTrafo=logTrain, parameterTrafoPCA=False)
+            if scikit: ThisData["Observables"][system][obs]["emulator"]["emu"] = Emulator(ThisData["Observables"][system][obs]["predpkl"], model_par, npc=4, logTrafo=logTrain, parameterTrafoPCA=False)
+            else: ThisData["Observables"][system][obs]["emulator"]["emu"] = EmulatorBAND(ThisData["Observables"][system][obs]["predpkl"], model_par, method='PCSK', logTrafo=logTrain, parameterTrafoPCA=False)
             ThisData["Observables"][system][obs]["emulator"]["emu"].trainEmulatorAutoMask()
 
             with open(ThisData["Observables"][system][obs]["emulator"]["file"], 'wb') as f:
@@ -252,7 +254,7 @@ def pp_extract_parameters(mymcmc, labels, outdir):
     return np.array(bests)
 
 # sets some universal plot characteristics
-def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):
+def makeplot(ThisData, plotname, indir, samples=None, logTrain=False, scikit=False):
     print("Making " + plotname + "...")
     for system in ThisData["Observables"]:
         Nobs = len(ThisData["Observables"][system])
@@ -277,10 +279,15 @@ def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):
                 trimmedsamples = samples[np.random.choice(range(len(samples)), 1000), :]
                 linecount = len(trimmedsamples)
                 for i2, point in enumerate(trimmedsamples):
-                    y = ThisData["Observables"][system][obs]["emulator"]["emu"].predict(point)
-                    axes[0][i].plot(DX, np.exp(y[0]) if logTrain else y[0], 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
-                    axes[1][i].plot(DX, np.exp(y[0])/DY if logTrain else y[0]/DY, 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
-            
+                    if scikit: 
+                        y = ThisData["Observables"][system][obs]["emulator"]["emu"].predict([point])
+                        axes[0][i].plot(DX, np.exp(y[0]) if logTrain else y[0], 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+                        axes[1][i].plot(DX, np.exp(y[0])/DY if logTrain else y[0]/DY, 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+                    else:
+                        y = ThisData["Observables"][system][obs]["emulator"]["emu"].predict(point)
+                        axes[0][i].plot(DX, np.exp(y[0]) if logTrain else y[0], 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+                        axes[1][i].plot(DX, np.exp(y[0])/DY if logTrain else y[0]/DY, 'b-', alpha=10/linecount, label="JETSCAPE" if i2==0 else '')
+                    
             axes[0][i].errorbar(DX, DY, yerr = DE, fmt='ro', label="Measurements", color='black')
             axes[1][i].plot(DX, 1+(DE/DY), 'b-', linestyle = '--', color='red')
             axes[1][i].plot(DX, 1-(DE/DY), 'b-', linestyle = '--', color='red')
@@ -296,7 +303,7 @@ def makeplot(ThisData, plotname, indir, samples=None, logTrain=False):
         # figure
 
 #running validation
-def validationPlots(valData, AllData, indir, logTrain = False):
+def validationPlots(valData, AllData, indir, logTrain=False, scikit=False):
     for system in AllData["Observables"]:
         Nobs = len(AllData["Observables"][system])
         figure, axes = plt.subplots(figsize = (3*Nobs, 3), ncols = Nobs, nrows = 1, squeeze = False)
@@ -309,9 +316,14 @@ def validationPlots(valData, AllData, indir, logTrain = False):
             DX = AllData["Observables"][system][obs]["data"]["Data"]["x"]
             linecount = len(valData["Design"]["Design"])
             for i2, point in enumerate(valData["Design"]["Design"]):
-                y1 = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point)
-                y2 = valData["Observables"][system][obs]['predictions']['Prediction'][i2]
-                axes[0][i].plot(DX, np.exp(y1[0])/y2 if logTrain else y1[0]/y2, 'b-', alpha=10/linecount)
+                if scikit:
+                    y1 = AllData["Observables"][system][obs]["emulator"]["emu"].predict([point])
+                    y2 = valData["Observables"][system][obs]['predictions']['Prediction'][i2]
+                    axes[0][i].plot(DX, np.exp(y1[0])/y2 if logTrain else y1[0]/y2, 'b-', alpha=10/linecount)
+                else:
+                    y1 = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point)
+                    y2 = valData["Observables"][system][obs]['predictions']['Prediction'][i2]
+                    axes[0][i].plot(DX, np.exp(y1[0])/y2 if logTrain else y1[0]/y2, 'b-', alpha=10/linecount)
             
             axes[0][i].axhline(y = 1, linestyle = '--')
             axes[0][i].set_xscale(valData["Observables"][system][obs]["plotvars"][2])
@@ -340,7 +352,7 @@ def buildClosurePkl(ThisData, valData, logTrain=False):
 
 
     dataArray = np.log(np.array(tempData) + 1e-30) if logTrain else np.array(tempData)
-    errorArray = np.abs(np.array(tempErrs)/np.array(tempData) + 1e-30) if logTrain else np.array(tempData)
+    errorArray = np.abs(np.array(tempErrs)/np.array(tempData) + 1e-30) if logTrain else np.array(tempErrs)
 
     totalDict = {"0": {"obs": np.array([dataArray,errorArray])}}
 
