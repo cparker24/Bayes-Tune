@@ -334,6 +334,52 @@ def validationPlots(valData, AllData, indir, logTrain=False, scikit=False):
         figure.savefig(indir+system+'Validation.pdf', dpi = 192)
         # figure
 
+# hoenstly calculation
+#running validation
+def ErrorHonestyPlots(valData, AllData, indir, logTrain=False, scikit=False):
+    for system in AllData["Observables"]:
+        Nobs = len(AllData["Observables"][system])
+        figure, axes = plt.subplots(figsize = (3*Nobs, 3), ncols = Nobs, nrows = 2, squeeze = False)
+
+        for i, obs in enumerate(AllData["Observables"][system]):
+            axes[0][i].set_title(obs)
+            axes[0][i].set_xlabel(valData["Observables"][system][obs]["plotvars"][0])
+            axes[0][i].set_ylabel(r"rms error")
+            axes[1][i].set_ylabel(r"honesty")
+
+            DX = AllData["Observables"][system][obs]["data"]["Data"]["x"]
+            error = np.zeros(DX.shape)
+            honesty = np.zeros(DX.shape)
+
+            linecount = len(valData["Design"]["Design"])
+            for i2, point in enumerate(valData["Design"]["Design"]):
+                if scikit:
+                    y1, cov = AllData["Observables"][system][obs]["emulator"]["emu"].predict(np.array([point]), return_cov=True)
+                else:
+                    y1, cov = AllData["Observables"][system][obs]["emulator"]["emu"].predict(point, return_cov=True)
+                
+                modelerr = np.diagonal(cov[0])
+                y2 = valData["Observables"][system][obs]['predictions']['Prediction'][i2]
+                if logTrain: y1[0] = np.exp(y1[0])
+                
+                error +=  pow((y1[0]-y2[0])/y2[0],2)
+                honesty += pow((y1[0]-y2[0])/modelerr,2)
+
+            error = np.sqrt(error/linecount)
+            honesty = np.log(np.sqrt(honesty/linecount))
+            
+            axes[0][i].plot(DX, error, 'b-')
+            axes[1][i].plot(DX, honesty, 'b-')
+
+            axes[1][i].axhline(y = 0, linestyle = '--')
+            axes[0][i].set_xscale(AllData["Observables"][system][obs]["plotvars"][2])
+            axes[1][i].set_xscale(AllData["Observables"][system][obs]["plotvars"][2])
+
+        plt.tight_layout()
+        figure.subplots_adjust(hspace=0)
+        figure.savefig(indir+system+'Honesty.pdf', dpi = 192)
+        # figure
+
 def buildClosurePkl(ThisData, valData, logTrain=False):
     # making directory first
     pklDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/temp-pkls/"+ThisData["name"]+"/"
