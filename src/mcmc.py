@@ -126,8 +126,10 @@ class Chain:
     """
     def __init__(self, mcmc_path="./mcmc/chain.pkl",
                  expdata_path="./exp_data.dat",
-                 model_parafile="./model.dat"
+                 model_parafile="./model.dat",
+                 errFactor=0.0
     ):
+        self.errFactor = errFactor
         logging.info('Initializing MCMC ...')
         self.mcmc_path = Path(mcmc_path)
         self.mcmc_path.parent.mkdir(exist_ok=True)
@@ -311,7 +313,7 @@ class Chain:
         nsamples = np.count_nonzero(inside)
         if nsamples > 0:
             # not sure why to use the last parameter for extra std
-            extra_std = 0.0*X[inside, -1]
+            extra_std = self.errFactor*X[inside, -1]
 
             #model_Y, model_cov = self.emu.predict(
             #    X[inside], return_cov=True, extra_std=extra_std
