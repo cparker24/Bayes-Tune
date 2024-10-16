@@ -360,10 +360,12 @@ def ErrorHonestyPlots(valData, AllData, indir, logTrain=False, scikit=False):
                 
                 modelerr = np.diagonal(cov[0])
                 y2 = valData["Observables"][system][obs]['predictions']['Prediction'][i2]
-                if logTrain: y1[0] = np.exp(y1[0])
+                if logTrain: 
+                    y1[0] = np.exp(y1[0])
+                    modelerr = np.exp(modelerr)*y1[0]
                 
-                error +=  pow((y1[0]-y2[0])/y2[0],2)
-                honesty += pow((y1[0]-y2[0])/modelerr,2)
+                error +=  pow((y1[0]-y2)/y2,2)
+                honesty += pow((y1[0]-y2)/modelerr,2)
 
             error = np.sqrt(error/linecount)
             honesty = np.log(np.sqrt(honesty/linecount))
