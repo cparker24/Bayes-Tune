@@ -297,7 +297,7 @@ class Emulator:
 
         # Fit a GP (optimize the kernel hyperparameters) to each PC.
         self.gps = [
-            GPR(kernel=kernel, alpha=0.1,
+            GPR(kernel=kernel, alpha=0.0001,
                 n_restarts_optimizer=self.nrestarts,
                 copy_X_train=False
             ).fit(design_points, z)
