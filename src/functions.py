@@ -224,6 +224,12 @@ def ee_extract_parameters(mymcmc, labels, outdir):
 
     return np.array(bests)
 
+# making supplmental points to run
+def MakeSupplementalDesign(samples, labels, outdir):
+    trimmedsamples = samples[np.random.choice(range(len(samples)), 50), :]
+    df = pd.DataFrame(trimmedsamples,columns=labels)
+    df.to_csv(outdir+'SupplmentalDesign.txt',index=False)
+
 def pp_extract_parameters(mymcmc, labels, outdir):
 
     #setting bounds
@@ -382,7 +388,7 @@ def ErrorHonestyPlots(valData, AllData, indir, logTrain=False, scikit=False):
         figure.savefig(indir+system+'Honesty.pdf', dpi = 192)
         # figure
 
-def buildClosurePkl(ThisData, valData, logTrain=False):
+def buildClosurePkl(ThisData, valData, logTrain=False, valPoint=0):
     # making directory first
     pklDir = "/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/temp-pkls/"+ThisData["name"]+"/"
     Path(pklDir).mkdir(parents=True, exist_ok=True)
@@ -392,9 +398,9 @@ def buildClosurePkl(ThisData, valData, logTrain=False):
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
             Result = valData["Observables"][system][obs]["predictions"]
-            for i in range(len(Result["Prediction"][0])):
-                tempData.append(Result["Prediction"][0][i])
-                tempErrs.append(Result["Error"][0][i])
+            for i in range(len(Result["Prediction"][valPoint])):
+                tempData.append(Result["Prediction"][valPoint][i])
+                tempErrs.append(Result["Error"][valPoint][i])
 
             print("Adding " + system + obs + " to closure data")
 
@@ -411,7 +417,8 @@ def buildClosurePkl(ThisData, valData, logTrain=False):
     return picklefile
 
 def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True):
-    closurepkl = buildClosurePkl(ThisData, valData, logTrain)
+    valPoint = 13
+    closurepkl = buildClosurePkl(ThisData, valData, logTrain, valPoint)
 
     mcmcpath = "mcmc/" + ThisData["name"] + "-closure.pkl"
     mymcmc = Chain(mcmc_path=mcmcpath, expdata_path=closurepkl, model_parafile=model_par)
@@ -447,7 +454,7 @@ def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = T
     # Loop over the diagonal
     for i in range(ndim):
         ax = axes[i, i]
-        ax.axvline(valData["Design"]["Design"][0][i], color="b")
+        ax.axvline(valData["Design"]["Design"][valPoint][i], color="b")
 
     plt.show()
     fig.savefig(indir+'Closure.pdf', dpi = 192)
@@ -470,4 +477,4 @@ def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = T
     bests = rslt.x
 
     for param_index in range(len(bests)):
-        print(f"{labels[param_index]}: {bests[param_index]:.3f} vs ", valData["Design"]["Design"][0][param_index])
+        print(f"{labels[param_index]}: {bests[param_index]:.3f} vs ", valData["Design"]["Design"][valPoint][param_index])
