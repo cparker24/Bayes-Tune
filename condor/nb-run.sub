@@ -1,5 +1,5 @@
 # run.sub -- simple job
-# execute with condor_submit condor/nb-run.sub
+# execute with condor_submit condor/nb-run.sub args="test.ipynb"
 
 executable              = condor/run.sh
 
