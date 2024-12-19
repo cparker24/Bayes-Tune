@@ -248,6 +248,7 @@ def makePlot(MCs, data, plotvars, plotDir):
 
 # getting 3 sets of input
 defaultDir = "/data/rjfgroup/rjf01/cameron.parker/runs/default/"
+hybridDir = "/data/rjfgroup/rjf01/cameron.parker/runs/default-hybrid/"
 tuneDir = sys.argv[1]
 dataDir = "/data/rjfgroup/rjf01/cameron.parker/data/"
 
@@ -260,6 +261,7 @@ except:
 
 # lists for histograms
 defaultList = getGraphs(defaultDir)
+defaultHybridList = getGraphs(hybridDir)
 tuneList = getGraphs(tuneDir)
 
 # getting data list
@@ -297,7 +299,8 @@ for system in AllData["Observables"]:
 # making plots
 for i in range(len(defaultList)):
     if(not tuneList[i]): continue
-    tempDict = {"default": defaultList[i],
+    tempDict = {"PP2019": defaultList[i],
+                "hybrid-default": defaultHybridList[i],
                 "tune": tuneList[i]
                 }
     
