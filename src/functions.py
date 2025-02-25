@@ -25,7 +25,8 @@ def trimRanges(ThisData):
     for system in ThisData["Observables"]:
         for obs in ThisData["Observables"][system]:
             for cut in ThisData["Observables"][system][obs]["cuts"]:
-                trimRange(ThisData["Observables"][system][obs], cut)
+                if(ThisData["Observables"][system][obs]["predictions"] is not None):
+                    trimRange(ThisData["Observables"][system][obs], cut)
 
 def updateCuts(ThisData, valData):
     for system in ThisData["Observables"]:
@@ -417,6 +418,7 @@ def buildClosurePkl(ThisData, valData, logTrain=False, valPoint=0):
     return picklefile
 
 def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True):
+    print("Running closure test...")
     valPoint = 13
     closurepkl = buildClosurePkl(ThisData, valData, logTrain, valPoint)
 
@@ -446,18 +448,8 @@ def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = T
     with open(mcmcpath, 'rb') as pf:
         data = pkl.load(pf)
 
-    labels = mymcmc.label
-    fig = corner.corner(data['chain'], weights=data['weights'], labels=labels, color="C0")
-    ndim = len(labels)
-    axes = np.array(fig.axes).reshape((ndim, ndim))
-
-    # Loop over the diagonal
-    for i in range(ndim):
-        ax = axes[i, i]
-        ax.axvline(valData["Design"]["Design"][valPoint][i], color="b")
-
-    plt.show()
-    fig.savefig(indir+'Closure.pdf', dpi = 192)
+    testsystem = list(ThisData["Observables"].keys())[0]
+    testobs = list(ThisData["Observables"][testsystem].keys())[0]
 
     #setting bounds
     bound_min = mymcmc.min
@@ -471,10 +463,23 @@ def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = T
                                         tol=1e-9,
                                         vectorized=True,
                                         )
-
     print(rslt.x)
-
     bests = rslt.x
 
-    for param_index in range(len(bests)):
-        print(f"{labels[param_index]}: {bests[param_index]:.3f} vs ", valData["Design"]["Design"][valPoint][param_index])
+    labels = mymcmc.label
+    fig = corner.corner(data['chain'], weights=data['weights'], labels=labels, color="C0", range=bounds)
+    ndim = len(labels)
+    axes = np.array(fig.axes).reshape((ndim, ndim))
+    print("Parameter: calculated vs actual")
+
+    # Loop over the diagonal
+    for i in range(ndim):
+        actual = valData["Design"]["Design"][valPoint][i]
+        print(f"{labels[i]}: {bests[i]:.3f} vs ", actual, bounds[i])
+        ax = axes[i, i]
+        ax.axvline(actual, color="b")
+        for j in range(ndim):
+            axes[i,j].set_xlim(bounds[j])
+
+    plt.show()
+    fig.savefig(indir+'Closure.pdf', dpi = 192)
