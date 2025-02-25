@@ -86,32 +86,35 @@ def ReadDesign(FileName):
 
 # old prediction reader
 def ReadPrediction(FileName):
-    # Initialize objects
-    Result = {}
-    Version = ''
+    try:
+        # Initialize objects
+        Result = {}
+        Version = ''
 
-    Result["FileName"] = FileName
+        Result["FileName"] = FileName
 
-    # First read all the header information
-    for Line in open(FileName+".dat"):
-        Items = Line.split()
-        if (len(Items) < 2): continue
-        if Items[0] != '#': continue
+        # First read all the header information
+        for Line in open(FileName+".dat"):
+            Items = Line.split()
+            if (len(Items) < 2): continue
+            if Items[0] != '#': continue
 
-        if(Items[1] == 'Version'):
-            Version = Items[2]
-        elif(Items[1] == 'Data'):
-            Result["Data"] = Items[2]
-        elif(Items[1] == 'Design'):
-            Result["Design"] = Items[2]
+            if(Items[1] == 'Version'):
+                Version = Items[2]
+            elif(Items[1] == 'Data'):
+                Result["Data"] = Items[2]
+            elif(Items[1] == 'Design'):
+                Result["Design"] = Items[2]
 
-    if(Version != '1.0'):
-        raise AssertionError('Bad file version number while reading design points')
+        if(Version != '1.0'):
+            raise AssertionError('Bad file version number while reading design points')
 
-    # Then read the actual model predictions
-    Result["Prediction"] = np.loadtxt(FileName+".dat").T
-    newrange = ~np.all(Result["Prediction"] == 0, axis=0)
-    Result["Prediction"] = Result["Prediction"][:,newrange]
-    Result["Error"] = np.loadtxt(FileName+".err").T
-    Result["Error"] = Result["Error"][:,newrange]
-    return Result
+        # Then read the actual model predictions
+        Result["Prediction"] = np.loadtxt(FileName+".dat").T
+        newrange = ~np.all(Result["Prediction"] == 0, axis=0)
+        Result["Prediction"] = Result["Prediction"][:,newrange]
+        Result["Error"] = np.loadtxt(FileName+".err").T
+        Result["Error"] = Result["Error"][:,newrange]
+        return Result
+    except Exception as e:
+        print("No file matching",FileName)

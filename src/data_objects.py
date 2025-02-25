@@ -2,9 +2,9 @@ from .readers import *
 import copy
 
 dataDir = '/data/rjfgroup/rjf01/cameron.parker/builds/Bayes-Tune/input/data/'
-LEPdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LEPdesign/QVir_Analysis/'
-LHCdir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC2760design/QVir_Analysis/'
-LHC13000dir = '/data/rjfgroup/rjf01/cameron.parker/runs/LHC13000design/QVir_Analysis/'
+LEPdir = '/data/rjfgroup/rjf01/cameron.parker/runs/no-part-prop/LEP/QVir_Analysis/'
+LHCdir = '/data/rjfgroup/rjf01/cameron.parker/runs/no-part-prop/LHC2760/QVir_Analysis/'
+LHC13000dir = '/data/rjfgroup/rjf01/cameron.parker/runs/no-part-prop/LHC13000/QVir_Analysis/'
 
 AllData = {}
 AllData["Design"] = ReadDesign("/data/rjfgroup/rjf01/cameron.parker/builds/JETSCAPE/designs/totaldesign.txt")
@@ -149,12 +149,12 @@ for system in AllData["Observables"]:
         AllData["Observables"][system][obs]["emulator"]["file"] = "emulators/"+system+obs+"-emulator.sav"
 
 # validation
-LEPvaldir = '/data/rjfgroup/rjf01/cameron.parker/runs/validation/LEP/QVir_Analysis/'
-LHCvaldir = '/data/rjfgroup/rjf01/cameron.parker/runs/validation/LHC2760/QVir_Analysis/'
-LHC13000valdir = '/data/rjfgroup/rjf01/cameron.parker/runs/validation/LHC13000/QVir_Analysis/'
+LEPvaldir = '/data/rjfgroup/rjf01/cameron.parker/runs/no-part-prop-val/LEP/QVir_Analysis/'
+LHCvaldir = '/data/rjfgroup/rjf01/cameron.parker/runs/no-part-prop-val/LHC2760/QVir_Analysis/'
+LHC13000valdir = '/data/rjfgroup/rjf01/cameron.parker/runs/no-part-prop-val/LHC13000/QVir_Analysis/'
 
 valData = copy.deepcopy(AllData)
-valData["Design"] = ReadDesign("/data/rjfgroup/rjf01/cameron.parker/builds/JETSCAPE/designs/validation-design.txt")
+valData["Design"] = ReadDesign("/data/rjfgroup/rjf01/cameron.parker/builds/JETSCAPE/designs/no-part-prop-val.txt")
 valData["Observables"]["EpEm91"]["charged-xp"]["predictions"] = ReadPrediction(LEPvaldir+'charged-xp')
 valData["Observables"]["EpEm91"]["pion-xp"]["predictions"] = ReadPrediction(LEPvaldir+'pion-xp')
 valData["Observables"]["EpEm91"]["kaon-xp"]["predictions"] = ReadPrediction(LEPvaldir+'kaon-xp')
