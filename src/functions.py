@@ -417,9 +417,8 @@ def buildClosurePkl(ThisData, valData, logTrain=False, valPoint=0):
 
     return picklefile
 
-def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True):
+def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True, valPoint = 1):
     print("Running closure test...")
-    valPoint = 13
     closurepkl = buildClosurePkl(ThisData, valData, logTrain, valPoint)
 
     mcmcpath = "mcmc/" + ThisData["name"] + "-closure.pkl"
