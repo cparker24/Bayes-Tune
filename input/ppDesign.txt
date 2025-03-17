@@ -5,4 +5,3 @@ QSfactor: QSfactor, 0, 1
 vir_factor: vir_factor, 0.1, 1
 probStoUD: probStoUD, 0.0, 0.5
 probQQtoQ: probQQtoQ, 0.0, 0.4
-part_prop: part_prop, 0, 2.0
