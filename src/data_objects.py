@@ -8,7 +8,7 @@ LHC13000dir = '/data/rjfgroup/rjf01/cameron.parker/runs/no-part-prop/LHC13000/QV
 RHICdir = '/data/rjfgroup/rjf01/cameron.parker/runs/no-part-prop/RHIC/QVir_Analysis/'
 
 AllData = {}
-AllData["Design"] = ReadDesign("/data/rjfgroup/rjf01/cameron.parker/builds/JETSCAPE/designs/totaldesign.txt")
+AllData["Design"] = ReadDesign("/data/rjfgroup/rjf01/cameron.parker/builds/JETSCAPE/designs/no-part-prop.txt")
 AllData["Observables"] = {"EpEm91": {}, "PrPr2760": {}, "PrPr13000": {}, "PrPr200": {}}
 AllData["Observables"]["EpEm91"]["charged-xp"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_charged-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'charged-xp'),
@@ -19,7 +19,7 @@ AllData["Observables"]["EpEm91"]["pion-xp"] = {"data": ReadData(dataDir+'Data_AL
                                                   "predictions": ReadPrediction(LEPdir+'pion-xp'),
                                                   "emulator": {},
                                                   "plotvars": ["$x_{p}$","$dN/dx_{p}$","log","log"],
-                                                  "cuts": [np.s_[-2:]]}
+                                                  "cuts": [np.s_[-2:],np.s_[::2]]}
 AllData["Observables"]["EpEm91"]["kaon-xp"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_kaon-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'kaon-xp'),
                                                   "emulator": {},
@@ -34,7 +34,7 @@ AllData["Observables"]["EpEm91"]["jets"] = {"data": ReadData(dataDir+'Data_ALEPH
                                                   "predictions": ReadPrediction(LEPdir+'jet'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$dN/dp_{T}$","linear","linear"],
-                                                  "cuts": [np.s_[-2:]]}
+                                                  "cuts": [[1,2,4,5,7,8,10,11,13,14,16,17,19,20,22,23]]}
 AllData["Observables"]["EpEm91"]["mult"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_mult.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'mult'),
                                                   "emulator": {},
@@ -148,22 +148,22 @@ AllData["Observables"]["PrPr200"]["pion-pT-soft"] = {"data": ReadData(dataDir+'D
                                                   "predictions": ReadPrediction(RHICdir+'PionSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[-10:],np.s_[:21]]}
+                                                  "cuts": [np.s_[:10],np.s_[-5:]]}
 AllData["Observables"]["PrPr200"]["pion-pT-hard"] = {"data": ReadData(dataDir+'Data_PHENIX_PrPr200_hard-pion.dat'),
                                                   "predictions": ReadPrediction(RHICdir+'PionSpectraPredictionHard'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": []}
+                                                  "cuts": [np.s_[:5]]}
 AllData["Observables"]["PrPr200"]["kaon-pT-soft"] = {"data": ReadData(dataDir+'Data_PHENIX_PrPr200_kaons.dat'),
                                                   "predictions": ReadPrediction(RHICdir+'KaonSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[-10:],np.s_[:16]]}
+                                                  "cuts": [np.s_[-5:],np.s_[:3]]}
 AllData["Observables"]["PrPr200"]["proton-pT-soft"] = {"data": ReadData(dataDir+'Data_PHENIX_PrPr200_protons.dat'),
                                                   "predictions": ReadPrediction(RHICdir+'ProtonSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[-10:],np.s_[:14]]}
+                                                  "cuts": [np.s_[-15:],np.s_[:5]]}
 AllData["Observables"]["PrPr200"]["jets"] = {"data": ReadData(dataDir+'Data_STAR_PrPr200_jets.dat'),
                                                   "predictions": ReadPrediction(RHICdir+'JetSpectraPrediction'),
                                                   "emulator": {},
@@ -189,7 +189,6 @@ valData["Observables"]["EpEm91"]["kaon-xp"]["predictions"] = ReadPrediction(LEPv
 valData["Observables"]["EpEm91"]["proton-xp"]["predictions"] = ReadPrediction(LEPvaldir+'proton-xp')
 valData["Observables"]["EpEm91"]["jets"]["predictions"] = ReadPrediction(LEPvaldir+'jet')
 valData["Observables"]["EpEm91"]["mult"]["predictions"] = ReadPrediction(LEPvaldir+'mult')
-
 
 valData["Observables"]["PrPr2760"]["charged-pT-soft"]["predictions"] = ReadPrediction(LHCvaldir+'HadronSpectraPredictionSoft')
 valData["Observables"]["PrPr2760"]["charged-pT-hard"]["predictions"] = ReadPrediction(LHCvaldir+'HadronSpectraPredictionHard')
