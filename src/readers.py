@@ -111,8 +111,13 @@ def ReadPrediction(FileName):
 
         # Then read the actual model predictions
         Result["Prediction"] = np.loadtxt(FileName+".dat").T
+        
+        # Removing nans and then all 0s
+        Result["Prediction"] = np.nan_to_num(Result["Prediction"]) 
         newrange = ~np.all(Result["Prediction"] == 0, axis=0)
         Result["Prediction"] = Result["Prediction"][:,newrange]
+
+        # Applying the same slice to the error file
         Result["Error"] = np.loadtxt(FileName+".err").T
         Result["Error"] = Result["Error"][:,newrange]
         return Result
