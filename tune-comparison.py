@@ -100,10 +100,14 @@ def getGraphs(mcDir):
     graphList = []
     LEProot = mcDir + "LEP/points/0/totals.root"
     LHC2760root = mcDir + "LHC2760/points/0/root/totals.root"
+    LHC13000root = mcDir + "LHC13000/points/0/root/totals.root"
+    RHICroot = mcDir + "RHIC/points/0/root/totals.root"
 
     # root files
     LEPfile = ROOT.TFile(LEProot,"r")
     LHC2760file = ROOT.TFile(LHC2760root,"r")
+    LHC13000file = ROOT.TFile(LHC13000root,"r")
+    RHICfile = ROOT.TFile(RHICroot,"r")
 
     graphList.append(histToGraph(LEPfile.Get("hadrons")))
     graphList.append(histToGraph(LEPfile.Get("pions")))
@@ -119,6 +123,18 @@ def getGraphs(mcDir):
     graphList.append(histToGraph(LHC2760file.Get("jet radius 0.2")))
     graphList.append(histToGraph(LHC2760file.Get("jet radius 0.3")))
     graphList.append(histToGraph(LHC2760file.Get("jet radius 0.4")))
+    
+    graphList.append(histToGraph(LHC13000file.Get("smooth pions")))
+    graphList.append(histToGraph(LHC13000file.Get("smooth kaons")))
+    graphList.append(histToGraph(LHC13000file.Get("smooth protons")))
+    graphList.append(histToGraph(LHC13000file.Get("low y jets")))
+    graphList.append(histToGraph(LHC13000file.Get("mid y jets")))
+    graphList.append(histToGraph(LHC13000file.Get("high y jets")))
+    
+    graphList.append(histToGraph(RHICfile.Get("identified pions")))
+    graphList.append(histToGraph(RHICfile.Get("identified kaons")))
+    graphList.append(histToGraph(RHICfile.Get("identified protons")))
+    graphList.append(histToGraph(RHICfile.Get("smooth jets")))
 
     return graphList
 
@@ -270,6 +286,10 @@ ALEPHjetfile = ROOT.TFile(dataDir+"ALEPH-jets.root","r")
 LHC2760hadronfile = ROOT.TFile(dataDir+"HadronData.root","r")
 LHC2760idfile = ROOT.TFile(dataDir+"LHC-ID-hads.root","r")
 LHC2760jetfile = ROOT.TFile(dataDir+"JetData.root","r")
+LHC13000hadronfile = ROOT.TFile(dataDir+"LHC13000.root","r")
+LHC13000jetfile = ROOT.TFile(dataDir+"LHC13000-jets.root","r")
+RHIChadronfile = ROOT.TFile(dataDir+"PHENIX-ID-hads.root","r")
+RHICjetfile = ROOT.TFile(dataDir+"STAR-jets.root","r")
 dataList = []
 
 dataList.append(ALEPHfile.Get("Table 9").Get("Graph1D_y1")) # xp
@@ -286,6 +306,18 @@ dataList.append(LHC2760idfile.Get("Table 3").Get("Graph1D_y3")) # protons
 dataList.append(LHC2760jetfile.Get("Table 4").Get("Graph1D_y1")) # jets 0.2
 dataList.append(LHC2760jetfile.Get("Table 4").Get("Graph1D_y2")) # jets 0.3
 dataList.append(LHC2760jetfile.Get("Table 4").Get("Graph1D_y3")) # jets 0.4
+
+dataList.append(LHC13000hadronfile.Get("Table 1").Get("Graph1D_y1")) # pions
+dataList.append(LHC13000hadronfile.Get("Table 2").Get("Graph1D_y1")) # kaons
+dataList.append(LHC13000hadronfile.Get("Table 6").Get("Graph1D_y1")) # protons
+dataList.append(LHC13000jetfile.Get("Table 1").Get("Graph1D_y1")) # low y jets
+dataList.append(LHC13000jetfile.Get("Table 2").Get("Graph1D_y1")) # mid y jets
+dataList.append(LHC13000jetfile.Get("Table 3").Get("Graph1D_y1")) # high y jets
+
+dataList.append(RHIChadronfile.Get("Table 1").Get("Graph1D_y1")) # pions
+dataList.append(RHIChadronfile.Get("Table 2").Get("Graph1D_y1")) # kaons
+dataList.append(RHIChadronfile.Get("Table 4").Get("Graph1D_y1")) # protons
+dataList.append(RHICjetfile.Get("jets")) # jets
 
 # getting plot vars from existing data structure
 plotVars = []
