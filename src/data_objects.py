@@ -76,7 +76,7 @@ AllData["Observables"]["PrPr2760"]["proton-pT-soft"] = {"data": ReadData(dataDir
                                                   "predictions": ReadPrediction(LHCdir+'ProtonSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[-10:],np.s_[:14]]}
+                                                  "cuts": [np.s_[-17:],np.s_[:14]]}
 AllData["Observables"]["PrPr2760"]["proton-pT-hard"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_protons-hard.dat'),
                                                   "predictions": ReadPrediction(LHCdir+'ProtonSpectraPredictionHard'),
                                                   "emulator": {},
