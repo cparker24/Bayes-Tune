@@ -186,7 +186,7 @@ def better_extract_parameters(mymcmc, labels, outdir):
 
     bests = rslt.x
     labels[3] = "QS"
-    bests[3] = (2*bests[6]+0.05) + (bests[2]-(2*bests[6]+0.05))*bests[3]
+    bests[3] = (2*0.4+0.05) + (bests[2]-(2*0.4+0.05))*bests[3]
 
     for param_index in range(len(bests)):
         print(f"{labels[param_index]}: {bests[param_index]:.3f}")
