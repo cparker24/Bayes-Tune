@@ -24,7 +24,7 @@ AllData["Observables"]["EpEm91"]["kaon-xp"] = {"data": ReadData(dataDir+'Data_AL
                                                   "predictions": ReadPrediction(LEPdir+'kaon-xp'),
                                                   "emulator": {},
                                                   "plotvars": ["$x_{p}$","$dN/dx_{p}$","log","log"],
-                                                  "cuts": [np.s_[-2:]]}
+                                                  "cuts": [np.s_[-2:],np.s_[::2]]}
 AllData["Observables"]["EpEm91"]["proton-xp"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_proton-xp.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'proton-xp'),
                                                   "emulator": {},
