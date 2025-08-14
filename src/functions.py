@@ -417,7 +417,7 @@ def buildClosurePkl(ThisData, valData, logTrain=False, valPoint=0):
 
     return picklefile
 
-def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True, valPoint = 1):
+def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True, valPoint = 25):
     print("Running closure test...")
     closurepkl = buildClosurePkl(ThisData, valData, logTrain, valPoint)
 
