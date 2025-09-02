@@ -146,6 +146,24 @@ def getEmuPathList(ThisData):
 
     return emuList
 
+# gets most likely point from log likelihood and set of samples from chain
+def chain_params(datachain, labels, outdir):
+
+    # design to be run for spread
+    trimmedsamples = datachain["chain"][np.random.choice(len(datachain["chain"]), 10), :]
+    df = pd.DataFrame(trimmedsamples,columns=labels)
+    df.to_csv(outdir+'SupplmentalDesign.txt',index=False)
+
+    # label change for optimal params
+    labels[3] = "QS"
+    
+    # loglikelihood max params
+    index = np.argmax(datachain["logl"])
+    bests = datachain["chain"][index]
+    bests[3] = (2*0.4+0.05) + (bests[2]-(2*0.4+0.05))*bests[3]
+    df = pd.DataFrame([bests],columns=labels)
+    df.to_csv(outdir+'parameters.txt',index=False)
+
 # getting most like param values
 def extract_parameters(data_array, labels, outdir):
     samples = data_array.reshape((-1,data_array.shape[-1]))
