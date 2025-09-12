@@ -1,5 +1,5 @@
-Q0: Q0, 1, 5
+Q0: Q0, 1, 4
 QSfactor: QSfactor, 0, 1
 vir_factor: vir_factor, 0.1, 1
 probStoUD: probStoUD, 0.05, 0.5
-probQQtoQ: probQQtoQ, 0.03, 0.4
+probQQtoQ: probQQtoQ, 0.08, 0.082
