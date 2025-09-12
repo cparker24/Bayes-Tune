@@ -155,12 +155,12 @@ def chain_params(datachain, labels, outdir):
     df.to_csv(outdir+'SupplmentalDesign.txt',index=False)
 
     # label change for optimal params
-    labels[3] = "QS"
+    #labels[3] = "QS"
     
     # loglikelihood max params
     index = np.argmax(datachain["logl"])
     bests = datachain["chain"][index]
-    bests[3] = (2*0.4+0.05) + (bests[2]-(2*0.4+0.05))*bests[3]
+    #bests[3] = (2*0.4+0.05) + (bests[2]-(2*0.4+0.05))*bests[3]
     df = pd.DataFrame([bests],columns=labels)
     df.to_csv(outdir+'parameters.txt',index=False)
 
