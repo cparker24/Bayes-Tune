@@ -193,6 +193,7 @@ valData["Observables"]["EpEm91"]["kaon-xp"]["predictions"] = ReadPrediction(LEPv
 valData["Observables"]["EpEm91"]["proton-xp"]["predictions"] = ReadPrediction(LEPvaldir+'proton-xp')
 valData["Observables"]["EpEm91"]["jets"]["predictions"] = ReadPrediction(LEPvaldir+'jet')
 valData["Observables"]["EpEm91"]["mult"]["predictions"] = ReadPrediction(LEPvaldir+'mult')
+valData["Observables"]["EpEm91"]["thrust"]["predictions"] = ReadPrediction(LEPvaldir+'thrust')
 
 valData["Observables"]["PrPr2760"]["charged-pT-soft"]["predictions"] = ReadPrediction(LHCvaldir+'HadronSpectraPredictionSoft')
 valData["Observables"]["PrPr2760"]["charged-pT-hard"]["predictions"] = ReadPrediction(LHCvaldir+'HadronSpectraPredictionHard')
