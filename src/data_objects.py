@@ -40,7 +40,11 @@ AllData["Observables"]["EpEm91"]["mult"] = {"data": ReadData(dataDir+'Data_ALEPH
                                                   "emulator": {},
                                                   "plotvars": ["$N_{charged}$","$P(N_{charged})$","linear","linear"],
                                                   "cuts": [np.s_[-11:],np.s_[:2]]}
-
+AllData["Observables"]["EpEm91"]["thrust"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_thrust.dat'),
+                                                  "predictions": ReadPrediction(LEPdir+'thrust'),
+                                                  "emulator": {},
+                                                  "plotvars": ["$T$","$P(T)$","linear","linear"],
+                                                  "cuts": []}
 
 AllData["Observables"]["PrPr2760"]["charged-pT-soft"] = {"data": ReadData(dataDir+'Data_CMS_PrPr2760_charged-hads-soft.dat'),
                                                   "predictions": ReadPrediction(LHCdir+'HadronSpectraPredictionSoft'),
@@ -56,7 +60,7 @@ AllData["Observables"]["PrPr2760"]["pion-pT-soft"] = {"data": ReadData(dataDir+'
                                                   "predictions": ReadPrediction(LHCdir+'PionSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[-10:],np.s_[:21]]}
+                                                  "cuts": []}
 AllData["Observables"]["PrPr2760"]["pion-pT-hard"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_pions-hard.dat'),
                                                   "predictions": ReadPrediction(LHCdir+'PionSpectraPredictionHard'),
                                                   "emulator": {},
@@ -66,7 +70,7 @@ AllData["Observables"]["PrPr2760"]["kaon-pT-soft"] = {"data": ReadData(dataDir+'
                                                   "predictions": ReadPrediction(LHCdir+'KaonSpectraPredictionSoft'),
                                                   "emulator": {},
                                                   "plotvars": ["$p_{T}$ [GeV]","$1/(N_{ev}*2\pi*p_T)d^2N/dp_{T}dy$","log","log"],
-                                                  "cuts": [np.s_[-10:],np.s_[:16]]}
+                                                  "cuts": []}
 AllData["Observables"]["PrPr2760"]["kaon-pT-hard"] = {"data": ReadData(dataDir+'Data_ALICE_PrPr2760_kaons-hard.dat'),
                                                   "predictions": ReadPrediction(LHCdir+'KaonSpectraPredictionHard'),
                                                   "emulator": {},
