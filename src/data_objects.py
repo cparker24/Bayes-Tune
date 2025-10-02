@@ -44,7 +44,7 @@ AllData["Observables"]["EpEm91"]["thrust"] = {"data": ReadData(dataDir+'Data_ALE
                                                   "predictions": ReadPrediction(LEPdir+'thrust'),
                                                   "emulator": {},
                                                   "plotvars": ["$T$","$P(T)$","linear","linear"],
-                                                  "cuts": []}
+                                                  "cuts": [np.s_[-10:]]}
 
 AllData["Observables"]["PrPr2760"]["charged-pT-soft"] = {"data": ReadData(dataDir+'Data_CMS_PrPr2760_charged-hads-soft.dat'),
                                                   "predictions": ReadPrediction(LHCdir+'HadronSpectraPredictionSoft'),
