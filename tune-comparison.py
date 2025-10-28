@@ -8,6 +8,7 @@ from ctypes import *
 ROOT.gStyle.SetTitleSize(0.1,"X")
 ROOT.gStyle.SetTitleSize(0.07,"Y")
 ROOT.gStyle.SetTitleOffset(0.9,"Y")
+ROOT.gStyle.SetTitleOffset(1.2,"X")
 ROOT.gStyle.SetTitleSize(0.1,"T")
 ROOT.gStyle.SetLabelSize(0.1,"X")
 ROOT.gStyle.SetLabelSize(0.07,"Y")
@@ -195,7 +196,7 @@ def makePlot(MCs, data, plotvars, plotDir):
     upperMG = ROOT.TMultiGraph()
     c = ROOT.TCanvas("c1","c1",1000,700)
     upper = ROOT.TPad("plot","plot",0,0.4,1,1)
-    upper.SetBottomMargin(0)
+    upper.SetBottomMargin(0.01)
     upper.Draw()
     upper.cd()
 
@@ -259,12 +260,12 @@ def makePlot(MCs, data, plotvars, plotDir):
     # drawing ratio plot
     c.cd()
     lower = ROOT.TPad("plot","plot",0,0,1,0.4)
-    lower.SetTopMargin(0)
-    lower.SetBottomMargin(0.2)
+    lower.SetTopMargin(0.02)
+    lower.SetBottomMargin(0.25)
     lower.Draw()
     lower.cd()
     if(xlog): lower.SetLogx()
-    lowerMG.SetMaximum(2.1)
+    lowerMG.SetMaximum(2.0)
     lowerMG.SetMinimum(0.)
     lowerMG.Draw("AP")
     lowerMG.GetXaxis().SetLimits(xmin,xmax)
@@ -352,9 +353,9 @@ dataList.append(LHC7000jetfile.Get("Table 1").Get("Graph1D_y1")) # mid R jets
 dataList.append(LHC7000jetfile.Get("Table 7").Get("Graph1D_y1")) # high R jets
 
 dataList.append(LHC5020hadronfile.Get("Table 4").Get("Graph1D_y1")) # charged pt
-dataList.append(LHC5020jetfile.Get("Jets with UE subtraction in pp 5.02 TeV").Get("Graph1D_y1")) # jets
-dataList.append(LHC5020jetfile.Get("Jets with UE subtraction in pp 5.02 TeV").Get("Graph1D_y2")) # jets
-dataList.append(LHC5020jetfile.Get("Jets with UE subtraction in pp 5.02 TeV").Get("Graph1D_y3")) # jets
+dataList.append(LHC5020jetfile.Get("Jets in pp 5.02 TeV").Get("Graph1D_y1")) # jets
+dataList.append(LHC5020jetfile.Get("Jets in pp 5.02 TeV").Get("Graph1D_y2")) # jets
+dataList.append(LHC5020jetfile.Get("Jets in pp 5.02 TeV").Get("Graph1D_y3")) # jets
 dataList.append(LHC5020jetfile.Get("Jets with UE subtraction in pp 5.02 TeV").Get("Graph1D_y4")) # jets
 
 # getting plot vars from existing data structure
