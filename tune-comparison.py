@@ -185,6 +185,30 @@ def divideGraph(numerator, denominator):
 
     return ROOT.TGraphErrors(bins,np.array(xs),np.array(ys),np.array(xerrs),np.array(yerrs))
 
+def MakeTPave(title):
+    pt = ROOT.TPaveText(.7, .65, .9, .85, "NDC")
+    pt.SetFillColor(ROOT.kWhite)
+
+    if("PrPr2760" in title): pt.AddText("p+p 2.76 TeV")
+    if("PrPr200" in title): pt.AddText("p+p 200 GeV")
+    if("PrPr13000" in title): pt.AddText("p+p 13 TeV")
+    if("PrPr5020" in title): pt.AddText("p+p 5.02 TeV")
+    if("PrPr7000" in title): pt.AddText("p+p 7 TeV")
+    if("EpEm91" in title): pt.AddText("e^{+}+e^{-} 91.2 GeV")
+
+    if("pion" in title): pt.AddText("#pi^{+}+#pi^{-}")
+    if("kaon" in title): pt.AddText("K^{+}+K^{-}")
+    if("proton" in title): pt.AddText("p+#bar{p}")
+    if("charged" in title): pt.AddText("charged hadrons")
+
+    if("jets-R2" in title): pt.AddText("anti-k_{T} R=0.2")
+    if("jets-R3" in title): pt.AddText("anti-k_{T} R=0.3")
+    if("jets-R4" in title): pt.AddText("anti-k_{T} R=0.4")
+    if("jets-R5" in title): pt.AddText("anti-k_{T} R=0.5")
+    if("jets-R6" in title): pt.AddText("anti-k_{T} R=0.6")
+
+    return pt
+
 def makePlot(MCs, data, plotvars, plotDir):
     # plot settings
     xlog = True if plotvars[2] == "log" else False
@@ -229,6 +253,9 @@ def makePlot(MCs, data, plotvars, plotDir):
     upperMG.Draw("AP")
     upperMG.GetXaxis().SetLimits(xmin,xmax)
     upper.BuildLegend()
+
+    pt = MakeTPave(title)
+    pt.Draw("SAME")
 
     # ratio plots
     lowerMG = ROOT.TMultiGraph()
@@ -366,6 +393,9 @@ for system in AllData["Observables"]:
         plotVarsTemp = AllData["Observables"][system][obs]["plotvars"]
         plotVarsTemp.append(system+obs)
         plotVars.append(plotVarsTemp)
+
+        # making tpave
+
 
 # making plots
 for i in range(len(defaultList)):
