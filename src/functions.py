@@ -435,7 +435,7 @@ def buildClosurePkl(ThisData, valData, logTrain=False, valPoint=0):
 
     return picklefile
 
-def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = True, valPoint = 25):
+def closureTest(ThisData, valData, indir, model_par, labels, runchain=True, logTrain = True, valPoint = 3):
     print("Running closure test...")
     closurepkl = buildClosurePkl(ThisData, valData, logTrain, valPoint)
 
@@ -444,14 +444,14 @@ def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = T
     mymcmc.loadEmulator(getEmuPathList(ThisData))
 
     # running pocoMC
-    n_effective=4000
-    n_active=2000
-    n_prior=8000
+    n_effective=16000
+    n_active=8000
+    n_prior=16000
     sample="tpcn"
-    n_max_steps=100
-    random_state=42
+    n_max_steps=500
+    random_state=43
 
-    n_total = 25000
+    n_total = 100000
     n_evidence = 0
 
     pool = 20
@@ -465,6 +465,9 @@ def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = T
     with open(mcmcpath, 'rb') as pf:
         data = pkl.load(pf)
 
+    index = np.argmax(data["logl"])
+    bests = data["chain"][index]
+
     testsystem = list(ThisData["Observables"].keys())[0]
     testobs = list(ThisData["Observables"][testsystem].keys())[0]
 
@@ -473,18 +476,13 @@ def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = T
     bound_max = mymcmc.max
     bounds = [(a,b) for (a,b) in zip(bound_min,bound_max)]
 
-    rslt = optimize.differential_evolution(lambda x: -mymcmc.log_likelihood(x.T), 
-                                        bounds=bounds,
-                                        maxiter=10000,
-                                        disp=True,
-                                        tol=1e-9,
-                                        vectorized=True,
-                                        )
-    print(rslt.x)
-    bests = rslt.x
-
-    labels = mymcmc.label
-    fig = corner.corner(data['chain'], weights=data['weights'], labels=labels, color="C0", range=bounds)
+    fig = corner.corner(data['chain'][:,:-1], 
+                weights=data['weights'], 
+                labels=labels, 
+                quantiles=[0.16, 0.5, 0.84],
+                show_titles=True,
+                title_kwargs={"fontsize": 16},
+                color="C0")
     ndim = len(labels)
     axes = np.array(fig.axes).reshape((ndim, ndim))
     print("Parameter: calculated vs actual")
@@ -494,7 +492,7 @@ def closureTest(ThisData, valData, indir, model_par, runchain=True, logTrain = T
         actual = valData["Design"]["Design"][valPoint][i]
         print(f"{labels[i]}: {bests[i]:.3f} vs ", actual, bounds[i])
         ax = axes[i, i]
-        ax.axvline(actual, color="b")
+        ax.axvline(actual, color="black", linestyle="--")
         for j in range(ndim):
             axes[i,j].set_xlim(bounds[j])
 
