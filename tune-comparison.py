@@ -200,12 +200,19 @@ def MakeTPave(title):
     if("kaon" in title): pt.AddText("K^{+}+K^{-}")
     if("proton" in title): pt.AddText("p+#bar{p}")
     if("charged" in title): pt.AddText("charged hadrons")
+    
+    if("mult" in title): pt.AddText("charged multiplicity")
 
     if("jets-R2" in title): pt.AddText("anti-k_{T} R=0.2")
     if("jets-R3" in title): pt.AddText("anti-k_{T} R=0.3")
     if("jets-R4" in title): pt.AddText("anti-k_{T} R=0.4")
     if("jets-R5" in title): pt.AddText("anti-k_{T} R=0.5")
     if("jets-R6" in title): pt.AddText("anti-k_{T} R=0.6")
+    
+    if("91jets" in title): 
+        pt.AddText("anti-k_{T} R=0.4")
+        pt.SetX1(0.2)
+        pt.SetX2(0.4)
 
     return pt
 
@@ -232,6 +239,7 @@ def makePlot(MCs, data, plotvars, plotDir):
     dataPlot.SetTitle("data")
     upperMG.Add(dataPlot,"AP")
     plotvars[1] = plotvars[1].replace('$', '')
+    plotvars[1] = plotvars[1].replace('\\', '#')
     upperMG.GetYaxis().SetTitle(plotvars[1])
     #upperMG.GetHistogram().SetTitle(title)
 

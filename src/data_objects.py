@@ -33,7 +33,7 @@ AllData["Observables"]["EpEm91"]["proton-xp"] = {"data": ReadData(dataDir+'Data_
 AllData["Observables"]["EpEm91"]["jets"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_inc-jets.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'jet'),
                                                   "emulator": {},
-                                                  "plotvars": [r"$p_{T}$ [GeV]",r"$dN/dp_{T}$","linear","linear"],
+                                                  "plotvars": [r"$p_{T}$ [GeV]",r"$\frac{dN}{dp_{T}}$","linear","linear"],
                                                   "cuts": [[1,2,4,5,7,8,10,11,13,14,16,17,19,20,22,23]]}
 AllData["Observables"]["EpEm91"]["mult"] = {"data": ReadData(dataDir+'Data_ALEPH_EpEm91_mult.dat'),
                                                   "predictions": ReadPrediction(LEPdir+'mult'),
