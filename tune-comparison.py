@@ -220,7 +220,7 @@ def makePlot(MCs, data, plotvars, plotDir):
     # plot settings
     xlog = True if plotvars[2] == "log" else False
     ylog = True if plotvars[3] == "log" else False
-    colors = [ROOT.kRed,ROOT.kBlue,ROOT.kBlue+3,ROOT.kAzure+10,ROOT.kBlue-10]
+    colors = [ROOT.kRed,ROOT.kGreen+2,ROOT.kBlue,ROOT.kBlue+3]
     title = plotvars[4]
 
     # Drawing main plot
@@ -236,7 +236,7 @@ def makePlot(MCs, data, plotvars, plotDir):
     dataPlot.SetMarkerStyle(ROOT.kFullDotLarge)
     dataPlot.SetMarkerColor(ROOT.kBlack)
     dataPlot.SetLineColor(ROOT.kBlack)
-    dataPlot.SetTitle("data")
+    dataPlot.SetTitle("Data")
     upperMG.Add(dataPlot,"AP")
     plotvars[1] = plotvars[1].replace('$', '')
     plotvars[1] = plotvars[1].replace('\\', '#')
@@ -409,9 +409,9 @@ for system in AllData["Observables"]:
 for i in range(len(defaultList)):
     if(not tuneList[i]): continue
     tempDict = {"PP2019": defaultList[i],
-                "hybrid-default": defaultHybridList[i],
-                "tune": tuneList[i],
-                "colored": colorList[i],
+                "Colored": colorList[i],
+                "Hybrid Default": defaultHybridList[i],
+                "Tune": tuneList[i],
                 }
     
     makePlot(tempDict, dataList[i], plotVars[i], plotDir)
